@@ -34,8 +34,11 @@
                 </a>
 
                 <nav class="site-nav" aria-label="{{t "Main navigation"}}">
-                    {{!-- Navigation + language switcher partials are filled in later slices. --}}
+                    {{!-- Navigation partial is filled in a later slice. --}}
                 </nav>
+
+                {{!-- Always-visible language control, far right of the header. --}}
+                {{> language-switcher}}
             </div>
         </header>
 
@@ -51,6 +54,9 @@
             </div>
         </footer>
     </div>
+
+    {{!-- Global: language switcher dropdown + current-language resolution. --}}
+    <script src="{{asset "js/lang-switcher.js"}}"></script>
 
     {{ghost_foot}}
 </body>

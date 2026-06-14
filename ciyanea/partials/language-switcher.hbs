@@ -1,0 +1,53 @@
+{{!--
+  Data-driven language switcher.
+
+  The language set is read live from Ghost: the language internal tags are all
+  internal tags except #micro. For each tag the country/flag <code> is the slug
+  with the leading `hash-` stripped; the flag image is the constructed flagcdn
+  URL (built by lang-switcher.js from data-lang-slug, since Ghost ships no string
+  helper to strip the prefix in-template), and the native name is the tag's
+  `description`. Adding a language requires no theme edit — only a new #<code>
+  internal tag (+ routes.yaml pair + locale).
+
+  There is no hard-coded language-code list and no uploaded tag image: each option
+  is produced by the live {{#get "tags"}} query below and the flag is loaded from
+  flagcdn online — never from a tag's uploaded image.
+--}}
+<div class="lang-switcher" data-lang-switcher>
+    <button
+        type="button"
+        class="lang-switcher-toggle"
+        aria-haspopup="listbox"
+        aria-expanded="false"
+        aria-label="{{t "Change language"}}"
+        data-lang-toggle
+    >
+        {{!-- Collapsed control: the current flag/code is filled in by
+              lang-switcher.js from the URL prefix (or stored preference). The
+              static fallback is a globe glyph so the control is meaningful
+              before JS runs and when no language is determinable. --}}
+        <img class="lang-switcher-current-flag" alt="" hidden data-lang-current-flag />
+        <span class="lang-switcher-current-glyph" aria-hidden="true" data-lang-current-glyph>&#127760;</span>
+    </button>
+
+    <ul class="lang-switcher-menu" role="listbox" hidden data-lang-menu>
+        {{#get "tags" filter="visibility:internal+slug:-hash-micro" fields="slug,description" limit="all"}}
+            {{#foreach tags}}
+                {{!-- data-lang-slug carries the full internal-tag slug (hash-<code>);
+                      lang-switcher.js derives <code> = slug without `hash-` to build
+                      the flag URL and the /<code>/ navigation target. --}}
+                <li
+                    class="lang-switcher-option"
+                    role="option"
+                    data-lang-option
+                    data-lang-slug="{{slug}}"
+                >
+                    <a class="lang-switcher-link" href="#" data-lang-select>
+                        <img class="lang-switcher-flag" alt="" loading="lazy" data-lang-flag />
+                        <span class="lang-switcher-name">{{description}}</span>
+                    </a>
+                </li>
+            {{/foreach}}
+        {{/get}}
+    </ul>
+</div>
