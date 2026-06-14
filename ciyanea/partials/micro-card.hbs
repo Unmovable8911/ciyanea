@@ -1,0 +1,46 @@
+{{!--
+  Tweet-style micro-post card.
+
+  Renders, for one micro-post: the body HTML (clamped to 5 lines via CSS, with a
+  click-to-expand toggle wired by micro-feed.js), an optional full-width feature
+  image below the body, and a relative timestamp (e.g. "3 hours ago") in the
+  bottom-right. There is deliberately NO title and NO author/profile link — micro
+  cards stay minimal and feed-like.
+
+  data-post-type="micro" keeps the rendered listing externally assertable as micro
+  content. data-micro-body marks the clamped body element so the reusable
+  expand/collapse logic in micro-feed.js (also reused by the slice-7 homepage
+  sidebar preview) can toggle the .is-expanded state.
+
+  The markup mirrors what micro-feed.js builds for appended pages, so server- and
+  client-rendered cards are identical.
+--}}
+<article class="micro-card" data-post-type="micro" data-micro-card>
+    <div class="micro-card-body" data-micro-body>
+        {{{html}}}
+    </div>
+
+    <button
+        type="button"
+        class="micro-card-expand"
+        data-micro-expand
+        aria-expanded="false"
+        hidden
+    >{{t "Show more"}}</button>
+
+    {{#if feature_image}}
+        <img
+            class="micro-card-image"
+            src="{{feature_image}}"
+            alt=""
+            loading="lazy"
+        />
+    {{/if}}
+
+    <div class="micro-card-meta">
+        <time
+            class="micro-card-time"
+            datetime="{{date format="YYYY-MM-DDTHH:mm:ssZ"}}"
+        >{{date timeago="true"}}</time>
+    </div>
+</article>

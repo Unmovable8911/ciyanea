@@ -8,7 +8,11 @@
 # internal tag is bound into the template; {{tag.slug}} (value hash-<code>) is
 # then used directly inside {{#get}} filters.
 #
-# The per-language /<code>/micro/ collections are added in later slices.
+# Each language also gets a /<code>/micro/ collection: the same internal language
+# tag ANDed with #micro (hash-micro), rendered through the `micro` template as a
+# tweet-style infinite-scroll stream. The more specific /<code>/micro/ collection
+# is declared before the broader /<code>/ index collection so Ghost routes the
+# micro path to the micro template.
 #
 # The `/` root route renders the lang-redirect template: a no-content shell that
 # loads lang-detect.js, which detects the visitor's preferred language and
@@ -19,11 +23,23 @@ routes:
   /: {template: lang-redirect}
 
 collections:
+  /cn/micro/:
+    permalink: /cn/micro/{slug}/
+    template: micro
+    filter: "tag:hash-cn+tag:hash-micro"
+    data: tag.hash-cn
+
   /cn/:
     permalink: /cn/{slug}/
     template: index
     filter: "tag:hash-cn+tag:-hash-micro"
     data: tag.hash-cn
+
+  /us/micro/:
+    permalink: /us/micro/{slug}/
+    template: micro
+    filter: "tag:hash-us+tag:hash-micro"
+    data: tag.hash-us
 
   /us/:
     permalink: /us/{slug}/
@@ -31,11 +47,23 @@ collections:
     filter: "tag:hash-us+tag:-hash-micro"
     data: tag.hash-us
 
+  /de/micro/:
+    permalink: /de/micro/{slug}/
+    template: micro
+    filter: "tag:hash-de+tag:hash-micro"
+    data: tag.hash-de
+
   /de/:
     permalink: /de/{slug}/
     template: index
     filter: "tag:hash-de+tag:-hash-micro"
     data: tag.hash-de
+
+  /fr/micro/:
+    permalink: /fr/micro/{slug}/
+    template: micro
+    filter: "tag:hash-fr+tag:hash-micro"
+    data: tag.hash-fr
 
   /fr/:
     permalink: /fr/{slug}/
@@ -43,17 +71,35 @@ collections:
     filter: "tag:hash-fr+tag:-hash-micro"
     data: tag.hash-fr
 
+  /ru/micro/:
+    permalink: /ru/micro/{slug}/
+    template: micro
+    filter: "tag:hash-ru+tag:hash-micro"
+    data: tag.hash-ru
+
   /ru/:
     permalink: /ru/{slug}/
     template: index
     filter: "tag:hash-ru+tag:-hash-micro"
     data: tag.hash-ru
 
+  /it/micro/:
+    permalink: /it/micro/{slug}/
+    template: micro
+    filter: "tag:hash-it+tag:hash-micro"
+    data: tag.hash-it
+
   /it/:
     permalink: /it/{slug}/
     template: index
     filter: "tag:hash-it+tag:-hash-micro"
     data: tag.hash-it
+
+  /es/micro/:
+    permalink: /es/micro/{slug}/
+    template: micro
+    filter: "tag:hash-es+tag:hash-micro"
+    data: tag.hash-es
 
   /es/:
     permalink: /es/{slug}/

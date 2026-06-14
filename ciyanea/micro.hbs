@@ -1,0 +1,38 @@
+{{!< default}}
+
+{{!--
+  Per-language micro-post stream at /<code>/micro/.
+
+  The route binds `data: tag.hash-<code>`, so the language's internal tag is
+  available here as {{@tag}} / {{tag}}; {{tag.slug}} is `hash-<code>`. The
+  collection filter (tag:hash-<code>+tag:hash-micro) means the server-rendered
+  {{#foreach posts}} already contains only this language's micro-posts — so the
+  first page renders without JS (progressive enhancement) and micro-feed.js takes
+  over to append further pages on infinite scroll.
+
+  Layout: a localized page title at the top and a single centered column
+  (max-width ~640px, styled via .micro-stream) holding the tweet-style cards.
+  data-micro-tag carries the language tag slug so micro-feed.js can build the
+  Content API filter (tag:hash-<code>+tag:hash-micro) without a hard-coded code.
+--}}
+
+<div class="micro-page">
+    <h1 class="micro-page-title">{{t "Micro"}}</h1>
+
+    <div
+        class="micro-stream"
+        data-micro-stream
+        data-micro-tag="{{tag.slug}}"
+    >
+        {{#foreach posts}}
+            {{> "micro-card"}}
+        {{else}}
+            <p class="micro-stream-empty">{{t "No micro-posts yet."}}</p>
+        {{/foreach}}
+    </div>
+
+    {{!-- Sentinel observed by micro-feed.js to trigger loading the next page. --}}
+    <div class="micro-stream-sentinel" data-micro-sentinel aria-hidden="true"></div>
+</div>
+
+<script src="{{asset "js/micro-feed.js"}}"></script>
