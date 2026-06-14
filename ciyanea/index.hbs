@@ -12,6 +12,13 @@
   through {{t}} for localization.
 --}}
 
+{{!--
+  Hero carousel of up to five featured posts in the current language. The partial
+  self-guards with {{#if posts}}, so it renders nothing when there are no featured
+  posts; hero.js (loaded below) drives auto-advance, arrows, and dot indicators.
+--}}
+{{> "hero"}}
+
 <div class="home-layout">
     <section class="post-feed" aria-label="{{t "Articles"}}">
         {{#foreach posts}}
@@ -39,3 +46,6 @@
         {{/if}}
     </section>
 </div>
+
+{{!-- Hero carousel behaviour: 5s auto-advance, arrows, dot indicators. --}}
+<script src="{{asset "js/hero.js"}}"></script>
