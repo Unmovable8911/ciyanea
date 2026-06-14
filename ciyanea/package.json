@@ -1,0 +1,38 @@
+{
+  "name": "ciyanea",
+  "description": "Eye-catching dark, multi-language Ghost theme with a micro-post stream.",
+  "version": "0.1.0",
+  "engines": {
+    "ghost": ">=5.0.0"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Kilian Chen",
+    "email": "kilian@ciyanea.theme"
+  },
+  "keywords": [
+    "ghost-theme",
+    "multilingual",
+    "dark"
+  ],
+  "config": {
+    "posts_per_page": 9,
+    "image_sizes": {
+      "xs": { "width": 150 },
+      "s": { "width": 400 },
+      "m": { "width": 750 },
+      "l": { "width": 960 },
+      "xl": { "width": 1200 }
+    },
+    "card_assets": true,
+    "custom": {
+      "content_api_key": {
+        "type": "text",
+        "description": "Ghost Content API key, used client-side for the micro-post feed (read-only, safe to expose)."
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.mjs\""
+  }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="{{@site.locale}}">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>{{meta_title}}</title>
+
+    {{!-- Fonts: Playfair Display (headings) + Inter (body) --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap"
+    />
+
+    {{!-- Theme styles + design tokens --}}
+    <link rel="stylesheet" type="text/css" href="{{asset "css/screen.css"}}" />
+
+    {{ghost_head}}
+</head>
+
+<body class="{{body_class}}" data-content-api-key="{{@custom.content_api_key}}">
+    <div class="site">
+        <header class="site-header">
+            <div class="site-header-inner">
+                <a class="site-logo" href="{{@site.url}}">
+                    {{#if @site.logo}}
+                        <img src="{{@site.logo}}" alt="{{@site.title}}" />
+                    {{else}}
+                        {{@site.title}}
+                    {{/if}}
+                </a>
+
+                <nav class="site-nav" aria-label="{{t "Main navigation"}}">
+                    {{!-- Navigation + language switcher partials are filled in later slices. --}}
+                </nav>
+            </div>
+        </header>
+
+        <main class="site-main" role="main">
+            {{{body}}}
+        </main>
+
+        <footer class="site-footer">
+            <div class="site-footer-inner">
+                <p class="site-footer-copyright">
+                    &copy; {{date format="YYYY"}} {{@site.title}}
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    {{ghost_foot}}
+</body>
+</html>

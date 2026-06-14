@@ -1,9 +1,60 @@
+# Ciyanea — URL-prefixed multi-language routes.
+#
+# Each language is keyed by a single country/flag code stored as the internal
+# tag's slug (hash-<code>). This one code drives the content filter, the URL
+# prefix, and the flag image. Codes: cn, us, de, fr, ru, it, es.
+#
+# Each /<code>/ collection declares `data: tag.hash-<code>` so the language's
+# internal tag is bound into the template; {{tag.slug}} (value hash-<code>) is
+# then used directly inside {{#get}} filters.
+#
+# The `/` root route and the per-language /<code>/micro/ collections are added
+# in later slices.
+
 routes:
 
 collections:
-  /:
-    permalink: /{slug}/
+  /cn/:
+    permalink: /cn/{slug}/
     template: index
+    filter: "tag:hash-cn+tag:-hash-micro"
+    data: tag.hash-cn
+
+  /us/:
+    permalink: /us/{slug}/
+    template: index
+    filter: "tag:hash-us+tag:-hash-micro"
+    data: tag.hash-us
+
+  /de/:
+    permalink: /de/{slug}/
+    template: index
+    filter: "tag:hash-de+tag:-hash-micro"
+    data: tag.hash-de
+
+  /fr/:
+    permalink: /fr/{slug}/
+    template: index
+    filter: "tag:hash-fr+tag:-hash-micro"
+    data: tag.hash-fr
+
+  /ru/:
+    permalink: /ru/{slug}/
+    template: index
+    filter: "tag:hash-ru+tag:-hash-micro"
+    data: tag.hash-ru
+
+  /it/:
+    permalink: /it/{slug}/
+    template: index
+    filter: "tag:hash-it+tag:-hash-micro"
+    data: tag.hash-it
+
+  /es/:
+    permalink: /es/{slug}/
+    template: index
+    filter: "tag:hash-es+tag:-hash-micro"
+    data: tag.hash-es
 
 taxonomies:
   tag: /tag/{slug}/

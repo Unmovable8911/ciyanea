@@ -1,0 +1,30 @@
+{{!< default}}
+
+{{!--
+  Homepage for one language. The route binds `data: tag.hash-<code>`, so the
+  language's internal tag is available as {{@tag}} / {{tag}} here. The collection
+  filter (tag:hash-<code>+tag:-hash-micro) already excludes micro-posts, so the
+  listing below contains only this language's long-form articles.
+
+  Full card fidelity (cover, excerpt, author, date, reading time) arrives in
+  slice 2; this slice renders a basic, externally-assertable list.
+--}}
+
+<div class="home-layout">
+    <section class="post-list" aria-label="{{t "Articles"}}">
+        {{#foreach posts}}
+            <article class="post-card" data-post-type="{{#has tag="hash-micro"}}micro{{else}}article{{/has}}">
+                <a class="post-card-link" href="{{url}}">
+                    <h2 class="post-card-title">{{title}}</h2>
+                </a>
+                {{#if custom_excerpt}}
+                    <p class="post-card-excerpt">{{custom_excerpt}}</p>
+                {{else}}
+                    <p class="post-card-excerpt">{{excerpt words="30"}}</p>
+                {{/if}}
+            </article>
+        {{else}}
+            <p class="post-list-empty">{{t "No posts yet."}}</p>
+        {{/foreach}}
+    </section>
+</div>
