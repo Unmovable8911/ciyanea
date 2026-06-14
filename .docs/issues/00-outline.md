@@ -1,7 +1,7 @@
-1. Walking skeleton + rendered-HTML test harness — blocked by: none — status: pending
-2. Homepage article listing (post-card + grid + pagination) — blocked by: 1 — status: pending
-3. Language switcher (data-driven) — blocked by: 1 — status: pending
-4. Root language detection & redirect — blocked by: 1 — status: pending
+1. Walking skeleton + rendered-HTML test harness — blocked by: none — status: resolved
+2. Homepage article listing (post-card + grid + pagination) — blocked by: 1 — status: resolved
+3. Language switcher (data-driven) — blocked by: 1 — status: resolved
+4. Root language detection & redirect — blocked by: 1 — status: resolved
 5. Hero carousel — blocked by: 2 — status: pending
 6. Micro stream page — blocked by: 1 — status: pending
 7. Homepage sidebar (recent micro preview + popular tags) — blocked by: 6 — status: pending

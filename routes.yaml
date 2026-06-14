@@ -8,10 +8,15 @@
 # internal tag is bound into the template; {{tag.slug}} (value hash-<code>) is
 # then used directly inside {{#get}} filters.
 #
-# The `/` root route and the per-language /<code>/micro/ collections are added
-# in later slices.
+# The per-language /<code>/micro/ collections are added in later slices.
+#
+# The `/` root route renders the lang-redirect template: a no-content shell that
+# loads lang-detect.js, which detects the visitor's preferred language and
+# redirects to /<code>/. It is declared as a static route (inline flow mapping)
+# so it is not a content collection.
 
 routes:
+  /: {template: lang-redirect}
 
 collections:
   /cn/:
