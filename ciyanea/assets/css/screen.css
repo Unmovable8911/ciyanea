@@ -126,31 +126,252 @@ a:hover {
     gap: var(--gap);
 }
 
-.post-list {
+/* Article grid: responsive auto-fit cards. */
+.post-feed {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--gap);
+    align-items: start;
 }
 
 .post-card {
+    display: flex;
+    flex-direction: column;
     background: var(--color-bg-card);
     border: 1px solid var(--color-border);
     border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.post-card:hover {
+    border-color: var(--color-accent);
+    transform: translateY(-2px);
+}
+
+.post-card-image-link {
+    display: block;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.post-card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.post-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
     padding: 1.25rem;
+    flex: 1 0 auto;
+}
+
+.post-card-tag {
+    align-self: flex-start;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+}
+
+.post-card-tag:hover {
+    text-decoration: none;
+    opacity: 0.85;
 }
 
 .post-card-title {
     font-size: 1.25rem;
-    margin-bottom: 0.5rem;
+    margin: 0;
+}
+
+.post-card-title .post-card-link {
+    color: var(--color-text);
+}
+
+.post-card-title .post-card-link:hover {
+    color: var(--color-accent);
+    text-decoration: none;
 }
 
 .post-card-excerpt {
     color: var(--color-text-muted);
     margin: 0;
+    /* 4-line clamp per the design. */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.post-card-author {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.post-card-author-avatar {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-card-author-name {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+.post-card-meta {
+    display: flex;
+    gap: 0.75rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.post-card-meta > * {
+    position: relative;
+}
+
+.post-card-reading-time::before {
+    content: "·";
+    margin-right: 0.75rem;
 }
 
 .post-list-empty {
     color: var(--color-text-muted);
+}
+
+/* --- Pagination --- */
+
+.pagination {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: var(--gap);
+    padding-top: 1rem;
+}
+
+.pagination-indicator {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.pagination-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text);
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    transition: border-color 0.2s ease, color 0.2s ease;
+}
+
+.pagination-link:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+    text-decoration: none;
+}
+
+/* --- Language switcher (header, dark dropdown) --- */
+
+.lang-switcher {
+    position: relative;
+    margin-left: 1rem;
+    flex: 0 0 auto;
+}
+
+.lang-switcher-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg-card);
+    color: var(--color-text);
+    cursor: pointer;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+}
+
+.lang-switcher-toggle:hover,
+.lang-switcher.is-open .lang-switcher-toggle {
+    border-color: var(--color-accent);
+}
+
+.lang-switcher-current-flag {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.lang-switcher-current-glyph {
+    font-size: 1.15rem;
+    line-height: 1;
+}
+
+.lang-switcher-menu {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 50;
+    min-width: 12rem;
+    margin: 0;
+    padding: 0.35rem;
+    list-style: none;
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.lang-switcher-option {
+    margin: 0;
+}
+
+.lang-switcher-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    color: var(--color-text);
+}
+
+.lang-switcher-link:hover {
+    text-decoration: none;
+    background: var(--color-bg);
+}
+
+.lang-switcher-option.is-current .lang-switcher-link {
+    color: var(--color-accent);
+}
+
+.lang-switcher-flag {
+    width: 1.4rem;
+    height: 1.4rem;
+    object-fit: cover;
+    border-radius: 50%;
+    flex: 0 0 auto;
+}
+
+.lang-switcher-name {
+    font-size: 0.9rem;
 }
 
 /* --- Koenig (editor) card widths --- */
@@ -185,7 +406,7 @@ a:hover {
         grid-template-columns: 1fr;
     }
 
-    .post-list {
+    .post-feed {
         grid-template-columns: 1fr;
     }
 }

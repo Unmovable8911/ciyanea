@@ -1,5 +1,9 @@
 {
     "Main navigation": "Main navigation",
+    "Change language": "Change language",
     "Articles": "Articles",
-    "No posts yet.": "No posts yet."
+    "No posts yet.": "No posts yet.",
+    "Pagination": "Pagination",
+    "Older": "Older",
+    "Newer": "Newer"
 }

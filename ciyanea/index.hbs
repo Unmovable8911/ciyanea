@@ -4,27 +4,38 @@
   Homepage for one language. The route binds `data: tag.hash-<code>`, so the
   language's internal tag is available as {{@tag}} / {{tag}} here. The collection
   filter (tag:hash-<code>+tag:-hash-micro) already excludes micro-posts, so the
-  listing below contains only this language's long-form articles.
+  grid below contains only this language's long-form articles.
 
-  Full card fidelity (cover, excerpt, author, date, reading time) arrives in
-  slice 2; this slice renders a basic, externally-assertable list.
+  Each post is rendered through the post-card partial (cover, first public tag,
+  title, 4-line excerpt, author avatar+name, date, reading time). Pagination is
+  custom markup built from the {{pagination}} variables, with labels routed
+  through {{t}} for localization.
 --}}
 
 <div class="home-layout">
-    <section class="post-list" aria-label="{{t "Articles"}}">
+    <section class="post-feed" aria-label="{{t "Articles"}}">
         {{#foreach posts}}
-            <article class="post-card" data-post-type="{{#has tag="hash-micro"}}micro{{else}}article{{/has}}">
-                <a class="post-card-link" href="{{url}}">
-                    <h2 class="post-card-title">{{title}}</h2>
-                </a>
-                {{#if custom_excerpt}}
-                    <p class="post-card-excerpt">{{custom_excerpt}}</p>
-                {{else}}
-                    <p class="post-card-excerpt">{{excerpt words="30"}}</p>
-                {{/if}}
-            </article>
+            {{> "post-card"}}
         {{else}}
             <p class="post-list-empty">{{t "No posts yet."}}</p>
         {{/foreach}}
+
+        {{#if pagination.pages}}
+            <nav class="pagination" role="navigation" aria-label="{{t "Pagination"}}">
+                {{#if prev}}
+                    <a class="pagination-link pagination-newer" href="{{page_url prev}}" rel="prev">
+                        &larr; {{t "Newer"}}
+                    </a>
+                {{/if}}
+
+                <span class="pagination-indicator">{{page}} / {{pages}}</span>
+
+                {{#if next}}
+                    <a class="pagination-link pagination-older" href="{{page_url next}}" rel="next">
+                        {{t "Older"}} &rarr;
+                    </a>
+                {{/if}}
+            </nav>
+        {{/if}}
     </section>
 </div>

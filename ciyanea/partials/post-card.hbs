@@ -1,0 +1,55 @@
+{{!--
+  Article card for the homepage / tag-page grid.
+
+  Renders, for one post: cover image, the first PUBLIC tag only ({{primary_tag}}
+  excludes internal hash- tags, and the row is hidden entirely when there is no
+  public tag), title, a 4-line clamped excerpt, and an author row with avatar +
+  name, publish date, and reading time.
+
+  data-post-type is emitted so the index/tag listings remain externally
+  assertable as containing only long-form articles (never "micro").
+--}}
+<article class="post-card" data-post-type="{{#has tag="hash-micro"}}micro{{else}}article{{/has}}">
+    {{#if feature_image}}
+        <a class="post-card-image-link" href="{{url}}" aria-hidden="true" tabindex="-1">
+            <img
+                class="post-card-image"
+                src="{{img_url feature_image size="m"}}"
+                srcset="{{img_url feature_image size="s"}} 400w, {{img_url feature_image size="m"}} 750w, {{img_url feature_image size="l"}} 960w"
+                sizes="(max-width: 768px) 100vw, 400px"
+                alt="{{title}}"
+                loading="lazy"
+            />
+        </a>
+    {{/if}}
+
+    <div class="post-card-body">
+        {{#primary_tag}}
+            <a class="post-card-tag" href="{{url}}">{{name}}</a>
+        {{/primary_tag}}
+
+        <h2 class="post-card-title">
+            <a class="post-card-link" href="{{url}}">{{title}}</a>
+        </h2>
+
+        {{#if custom_excerpt}}
+            <p class="post-card-excerpt">{{custom_excerpt}}</p>
+        {{else}}
+            <p class="post-card-excerpt">{{excerpt words="40"}}</p>
+        {{/if}}
+
+        {{#primary_author}}
+            <div class="post-card-author">
+                {{#if profile_image}}
+                    <img class="post-card-author-avatar" src="{{img_url profile_image size="xs"}}" alt="{{name}}" loading="lazy" />
+                {{/if}}
+                <span class="post-card-author-name">{{name}}</span>
+            </div>
+        {{/primary_author}}
+
+        <div class="post-card-meta">
+            <time class="post-card-date" datetime="{{date format="YYYY-MM-DD"}}">{{date}}</time>
+            <span class="post-card-reading-time">{{reading_time}}</span>
+        </div>
+    </div>
+</article>
