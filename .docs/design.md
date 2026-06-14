@@ -11,19 +11,20 @@
 
 | Language | Internal Tag | URL Prefix |
 |----------|-------------|------------|
-| Chinese  | `#zh`       | `/zh/`     |
-| English  | `#en`       | `/en/`     |
+| Chinese  | `#cn`       | `/cn/`     |
+| English  | `#us`       | `/us/`     |
 | German   | `#de`       | `/de/`     |
 | French   | `#fr`       | `/fr/`     |
 | Russian  | `#ru`       | `/ru/`     |
 | Italian  | `#it`       | `/it/`     |
 | Spanish  | `#es`       | `/es/`     |
 
-All languages have a URL prefix; there is no unprefixed default language. Adding a new language in the future only requires extending `routes.yaml` and the language constants list.
+Each language is keyed by a single **country/flag code** (the internal tag's slug `hash-<code>`); this one code drives the content filter, the URL prefix, and the flag image. Codes: `cn, us, de, fr, ru, it, es`. All languages have a URL prefix; there is no unprefixed default language. Adding a new language only requires extending `routes.yaml` and creating a `#<code>` internal tag in admin — no theme code changes, since the theme reads codes live from the tag slugs.
 
 Each language's internal tag is configured in the Ghost admin with:
-- `feature_image`: a circular SVG flag icon for the corresponding country
+- A name equal to its country/flag code (e.g. Chinese → `#cn`, English → `#us`)
 - `description`: the language's native name (e.g. German → `Deutsch`, Russian → `Русский`)
+- No image upload — the flag is loaded online from `https://flagcdn.io/flags/1x1/<code>.svg`, where `<code>` is the tag slug with the `hash-` prefix stripped
 
 ---
 
@@ -35,23 +36,27 @@ routes:
     template: lang-redirect
 
 collections:
-  /zh/:
-    permalink: /zh/{slug}/
+  /cn/:
+    permalink: /cn/{slug}/
     template: index
-    filter: "tag:hash-zh+tag:-hash-micro"
-  /zh/micro/:
-    permalink: /zh/micro/{slug}/
+    filter: "tag:hash-cn+tag:-hash-micro"
+    data: tag.hash-cn
+  /cn/micro/:
+    permalink: /cn/micro/{slug}/
     template: micro
-    filter: "tag:hash-zh+tag:hash-micro"
+    filter: "tag:hash-cn+tag:hash-micro"
+    data: tag.hash-cn
 
-  /en/:
-    permalink: /en/{slug}/
+  /us/:
+    permalink: /us/{slug}/
     template: index
-    filter: "tag:hash-en+tag:-hash-micro"
-  /en/micro/:
-    permalink: /en/micro/{slug}/
+    filter: "tag:hash-us+tag:-hash-micro"
+    data: tag.hash-us
+  /us/micro/:
+    permalink: /us/micro/{slug}/
     template: micro
-    filter: "tag:hash-en+tag:hash-micro"
+    filter: "tag:hash-us+tag:hash-micro"
+    data: tag.hash-us
 
   # de, fr, ru, it, es follow the same pattern
 
@@ -60,7 +65,9 @@ taxonomies:
   author: /author/{slug}/
 ```
 
-**Filter syntax note:** Ghost internal tag `#zh` is written as `hash-zh` in filter expressions. `+` means AND; a `-` prefix means NOT.
+The `data: tag.hash-<code>` binding makes the language's internal tag available to the template, so `{{tag.slug}}` (value `hash-<code>`) can be used directly inside `{{#get}}` filters.
+
+**Filter syntax note:** Ghost internal tag `#cn` is written as `hash-cn` in filter expressions. `+` means AND; a `-` prefix means NOT.
 
 ---
 
@@ -72,28 +79,28 @@ The root path `/` renders no visible content (blank page) and immediately runs J
 
 ```
 1. Read localStorage["preferred-lang"]
-2. If present and valid → redirect to /<lang>/
-3. Otherwise → read navigator.language, extract primary language code (e.g. "zh-CN" → "zh")
-4. If it matches a supported language → write to localStorage, redirect to /<lang>/
-5. No match → redirect to /en/ (fallback)
+2. If present and in the supported set → redirect to /<code>/
+3. Otherwise → read navigator.language and derive a candidate code, considering both the region and primary subtags (e.g. "zh-CN" → "cn", "en-US" → "us", "de-DE" → "de")
+4. If a candidate matches a supported code → write to localStorage, redirect to /<code>/
+5. No match → redirect to /us/ (fallback)
 ```
 
-Supported language codes: `["zh", "en", "de", "fr", "ru", "it", "es"]`
+Supported codes: `["cn", "us", "de", "fr", "ru", "it", "es"]` — obtained dynamically from Ghost (the internal tags except `#micro`, injected into the page by `lang-redirect.hbs`), never hard-coded in the JS
 
 ### 3.2 Language Switcher
 
 - **Position:** Far right of the header
-- **Appearance:** Flag icon of the current language (`feature_image`, set dynamically by reading localStorage or the URL prefix to determine the current language)
-- **Expanded:** Click to open a dropdown listing all 7 languages
-- **Each option:** tag `feature_image` (circular flag SVG) + tag `description` (native name)
-- **Data source:** `{{#get "tags" filter="slug:[hash-zh,hash-en,hash-de,hash-fr,hash-ru,hash-it,hash-es]" fields="slug,description,feature_image"}}` — adding a new language requires no theme code changes
+- **Appearance:** Flag icon of the current language — the online image `https://flagcdn.io/flags/1x1/<code>.svg`, where `<code>` is determined by reading the URL prefix (or localStorage on non-prefixed pages)
+- **Expanded:** Click to open a dropdown listing all languages
+- **Each option:** the flag image `https://flagcdn.io/flags/1x1/<code>.svg` (code = tag slug minus `hash-`) + tag `description` (native name)
+- **Data source:** `{{#get "tags" filter="visibility:internal+slug:-hash-micro" fields="slug,description"}}` — the language tags are the internal tags except `#micro`; adding a new language requires no theme code changes
 - **On selection:**
-  1. Write `localStorage["preferred-lang"] = "<lang>"`
-  2. Redirect to `/<lang>/` (always goes to the language homepage; no cross-language article mapping)
+  1. Write `localStorage["preferred-lang"] = "<code>"`
+  2. Redirect to `/<code>/` (always goes to the language homepage; no cross-language article mapping)
 
 ### 3.3 Current Language Detection (theme side)
 
-- Pages with a language prefix (`/zh/`, `/en/`, etc.): parse the URL path prefix
+- Pages with a language prefix (`/cn/`, `/us/`, etc.): parse the URL path prefix
 - Pages without a language prefix (`/tag/{slug}/`, etc.): read `localStorage["preferred-lang"]`; if no match, no language is highlighted
 
 ---
@@ -139,7 +146,7 @@ theme/
 ├── tag.hbs                 # Tag page: tag header + article list + right sidebar
 ├── error.hbs               # Generic error page: minimal centered layout, no sidebar
 ├── error-404.hbs           # 404 page: minimal centered layout, no sidebar
-├── micro.hbs               # Micro-post page (/zh/micro/): single centered column, infinite scroll, page title at top
+├── micro.hbs               # Micro-post page (/<code>/micro/): single centered column, infinite scroll, page title at top
 ├── lang-redirect.hbs       # Root path: blank page + JS language detection and redirect
 ├── partials/
 │   ├── post-card.hbs           # Article card: cover image, first public tag, title, 4-line excerpt, author, date, reading time
@@ -190,7 +197,7 @@ theme/
 [Main]
   [Article List]          [Sidebar]
   article card grid         recent micro-post card (1)
-  Ghost native pagination   "View all micro-posts" → /zh/micro/
+  Ghost native pagination   "View all micro-posts" → /<code>/micro/
   format: current / total   popular tags
 [Footer]
 ```
@@ -243,7 +250,7 @@ Minimal centered layout, no sidebar: error message (localized) + return-to-homep
 
 ### 7.1 Hero Carousel (`hero.hbs` + `hero.js`)
 
-- Data: `{{#get "posts" filter="featured:true+tag:hash-<lang>" limit="5"}}`
+- Data: `{{#get "posts" filter="featured:true+tag:{{tag.slug}}" limit="5"}}` (the bound language tag, slug `hash-<code>`)
 - When no featured posts: the entire Hero section is hidden (`{{#if}}`)
 - Auto-play interval: 5 seconds
 - Manual switching: left/right arrows + dot indicators
@@ -301,7 +308,7 @@ Micro-post page (infinite scroll):
 
 ```
 GET /ghost/api/content/posts/
-  ?filter=tag:hash-<lang>%2Btag:hash-micro
+  ?filter=tag:hash-<code>%2Btag:hash-micro
   &fields=html,published_at,feature_image
   &limit=20
   &page=<n>
@@ -315,6 +322,8 @@ Sidebar recent micro-post (1 post): same as above with `limit=1&page=1`
 ## 9. Locales
 
 Each language has a corresponding `locales/<lang>.json`, with UI strings translated via `{{t "..."}}`, including: navigation labels, "View all micro-posts", "reading time", "Table of Contents", "Related posts", "Author", "Page not found", "Something went wrong", "Return to homepage", pagination text, etc.
+
+Note: locale files are named by Ghost's **language** locale code (`zh, en, de, fr, ru, it, es`), which is distinct from the **route/flag code** stored on the partition tag (`cn, us, de, fr, ru, it, es`). They differ only for Chinese (`zh` ↔ `cn`) and English (`en` ↔ `us`).
 
 ---
 
