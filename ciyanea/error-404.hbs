@@ -1,0 +1,18 @@
+{{!< default}}
+
+{{!--
+  404 — page not found.
+
+  A minimal centered layout with a localized "page not found" message and a
+  return-to-homepage button. All chrome strings are routed through {{t}}. The
+  return link targets {{@site.url}} (the root), which runs language detection and
+  forwards the visitor to their language homepage.
+--}}
+
+<section class="error">
+    <div class="error-inner">
+        <p class="error-code">404</p>
+        <h1 class="error-title">{{t "Page not found"}}</h1>
+        <a class="error-home-link" href="{{@site.url}}">{{t "Back to home"}}</a>
+    </div>
+</section>

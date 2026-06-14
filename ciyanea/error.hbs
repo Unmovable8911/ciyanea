@@ -1,0 +1,17 @@
+{{!< default}}
+
+{{!--
+  Generic error page (5xx and other non-404 errors).
+
+  A minimal centered layout with a localized generic-error message and a
+  return-to-homepage button. All chrome strings are routed through {{t}}. The
+  status code is surfaced via Ghost's {{code}} error variable when present.
+--}}
+
+<section class="error">
+    <div class="error-inner">
+        {{#if code}}<p class="error-code">{{code}}</p>{{/if}}
+        <h1 class="error-title">{{t "Something went wrong"}}</h1>
+        <a class="error-home-link" href="{{@site.url}}">{{t "Back to home"}}</a>
+    </div>
+</section>

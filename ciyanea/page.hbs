@@ -1,0 +1,22 @@
+{{!< default}}
+
+{{!--
+  Static page (e.g. About).
+
+  A full-width centered single column with NO sidebar — distinct from the
+  homepage's two-column layout. Suited to long-form static content. The page
+  body is rendered through Ghost's {{content}} helper so Koenig cards (wide/full
+  width images, etc.) render correctly.
+--}}
+
+{{#page}}
+<article class="page">
+    <header class="page-header">
+        <h1 class="page-title">{{title}}</h1>
+    </header>
+
+    <section class="page-content">
+        {{content}}
+    </section>
+</article>
+{{/page}}
