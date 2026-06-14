@@ -146,11 +146,14 @@
   }
 
   function init() {
-    var stream = document.querySelector("[data-micro-stream]");
-    if (!stream) return;
-
-    // Wire expand/collapse on the server-rendered first page immediately.
+    // Wire expand/collapse on every server-rendered card in the document first.
+    // This runs on the homepage too, where the sidebar shows a single micro-card
+    // preview but there is NO [data-micro-stream] — so it must happen before any
+    // stream-dependent early return.
     setupExpandAll(document);
+
+    var stream = document.querySelector("[data-micro-stream]");
+    if (!stream) return; // homepage: no infinite-scroll stream, expand is enough
 
     var key = document.body.getAttribute("data-content-api-key");
     var tagSlug = stream.getAttribute("data-micro-tag");

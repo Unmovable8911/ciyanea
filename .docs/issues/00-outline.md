@@ -4,7 +4,7 @@
 4. Root language detection & redirect — blocked by: 1 — status: resolved
 5. Hero carousel — blocked by: 2 — status: resolved
 6. Micro stream page — blocked by: 1 — status: resolved
-7. Homepage sidebar (recent micro preview + popular tags) — blocked by: 6 — status: pending
+7. Homepage sidebar (recent micro preview + popular tags) — blocked by: 6 — status: resolved
 8. Article detail page — blocked by: 2, 7 — status: pending
 9. Tag page — blocked by: 2, 7 — status: pending
 10. Static page + error pages — blocked by: 1 — status: resolved

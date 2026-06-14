@@ -45,7 +45,22 @@
             </nav>
         {{/if}}
     </section>
+
+    {{!--
+      Right-hand sidebar: recent micro-post preview + popular tags. It sits in
+      the second column of .home-layout on wide screens and collapses below the
+      main column under 768px (see the responsive rules in screen.css).
+    --}}
+    {{> "sidebar"}}
 </div>
 
 {{!-- Hero carousel behaviour: 5s auto-advance, arrows, dot indicators. --}}
 <script src="{{asset "js/hero.js"}}"></script>
+
+{{!--
+  micro-feed.js wires the shared expand/collapse behavior onto the sidebar's
+  recent micro-post preview (it targets every [data-micro-card] in the document).
+  There is no [data-micro-stream] on the homepage, so the infinite-scroll path is
+  inert — only the reusable expand/collapse runs here.
+--}}
+<script src="{{asset "js/micro-feed.js"}}"></script>

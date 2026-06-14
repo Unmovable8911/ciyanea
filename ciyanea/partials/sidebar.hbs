@@ -1,0 +1,58 @@
+{{!--
+  Context-aware sidebar.
+
+  This slice implements the HOMEPAGE branch: a preview of the most recent
+  micro-post for the current language, a language-relative "view all micro-posts"
+  link, and a popular-tags block. (The article-page branch — ToC + featured posts
+  — is added in a later slice.)
+
+  The route binds `data: tag.hash-<code>`, so the language's internal tag is
+  available here as {{tag}} and {{tag.slug}} is `hash-<code>`. The recent
+  micro-post is fetched with the SAME query as the micro feed, limited to one:
+  filter tag:<lang>+tag:hash-micro, limit=1, page=1. It is rendered through the
+  micro-card partial so the preview matches the stream presentation, and
+  micro-feed.js (loaded on the homepage) wires the identical expand/collapse
+  behavior onto it via the shared [data-micro-card] hook.
+--}}
+<aside class="home-sidebar" aria-label="{{t "Sidebar"}}">
+
+    {{!-- Recent micro-post preview. --}}
+    <section class="sidebar-block sidebar-micro" aria-label="{{t "Recent micro-post"}}">
+        <h2 class="sidebar-heading">{{t "Latest micro-post"}}</h2>
+
+        {{#get "posts" filter="tag:{{tag.slug}}+tag:hash-micro" limit="1" page="1"}}
+            {{#foreach posts}}
+                {{> "micro-card"}}
+            {{else}}
+                <p class="sidebar-empty">{{t "No micro-posts yet."}}</p>
+            {{/foreach}}
+        {{/get}}
+
+        {{!-- Language-relative link: lang-switcher.js rewrites data-lang-href
+              into /<code>/micro/ for the active language. --}}
+        <a class="sidebar-micro-all" href="#" data-lang-href="micro/">
+            {{t "View all micro-posts"}} &rarr;
+        </a>
+    </section>
+
+    {{!-- Popular tags. Public tags only (internal hash- language/micro tags are
+          not browsable topics); each entry links to its /tag/<slug>/ page. --}}
+    <section class="sidebar-block sidebar-tags popular-tags" aria-label="{{t "Popular tags"}}">
+        <h2 class="sidebar-heading">{{t "Popular tags"}}</h2>
+
+        {{#get "tags" filter="visibility:public" limit="10" order="count.posts desc" include="count.posts"}}
+            {{#if tags}}
+                <ul class="popular-tags-list">
+                    {{#foreach tags}}
+                        <li class="popular-tags-item">
+                            <a class="popular-tags-link" href="{{url}}">{{name}}</a>
+                        </li>
+                    {{/foreach}}
+                </ul>
+            {{else}}
+                <p class="sidebar-empty">{{t "No tags yet."}}</p>
+            {{/if}}
+        {{/get}}
+    </section>
+
+</aside>

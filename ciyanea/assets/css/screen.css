@@ -715,6 +715,85 @@ a:hover {
     height: 1px;
 }
 
+/* --- Homepage sidebar (recent micro preview + popular tags) --- */
+
+.home-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+    align-self: start;
+}
+
+.sidebar-block {
+    background: var(--color-bg-card);
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    padding: 1.25rem 1.4rem;
+}
+
+.sidebar-heading {
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+}
+
+.sidebar-empty {
+    color: var(--color-text-muted);
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* The sidebar's micro preview reuses the .micro-card styling; drop the standalone
+   card chrome since it already sits inside a .sidebar-block. */
+.sidebar-micro .micro-card {
+    background: none;
+    border: 0;
+    border-left: 0;
+    border-radius: 0;
+    padding: 0;
+}
+
+.sidebar-micro-all {
+    display: inline-block;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--color-accent);
+}
+
+.popular-tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.popular-tags-item {
+    margin: 0;
+}
+
+.popular-tags-link {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+    color: var(--color-text);
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.popular-tags-link:hover {
+    text-decoration: none;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
 /* --- Koenig (editor) card widths --- */
 
 .kg-width-wide {
