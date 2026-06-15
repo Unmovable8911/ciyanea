@@ -1,0 +1,89 @@
+{{!< default}}
+
+{{!--
+  Article detail page.
+
+  The route binds `data: tag.hash-<code>`, so the current language's internal tag
+  is available as {{tag}} / {{tag.slug}} (value hash-<code>) for the related-posts
+  query below.
+
+  Layout mirrors the homepage two-column scaffold (.home-layout): the article in
+  the main column, the article-aware sidebar (ToC container + featured posts) in
+  the second column. The sidebar partial branches on the {{post}} context, so it
+  renders the article variant here.
+--}}
+
+{{#post}}
+<div class="home-layout">
+    <article class="post-full">
+        <header class="post-full-header">
+            {{#primary_tag}}
+                <a class="post-full-tag" href="{{url}}">{{name}}</a>
+            {{/primary_tag}}
+
+            <h1 class="post-full-title">{{title}}</h1>
+
+            <div class="post-full-meta">
+                {{#primary_author}}
+                    <span class="post-full-author">{{name}}</span>
+                {{/primary_author}}
+                <time class="post-full-date" datetime="{{date format="YYYY-MM-DD"}}">{{date}}</time>
+                <span class="post-full-reading-time">{{reading_time}}</span>
+            </div>
+        </header>
+
+        {{#if feature_image}}
+            <figure class="post-full-image">
+                <img
+                    src="{{img_url feature_image size="xl"}}"
+                    srcset="{{img_url feature_image size="m"}} 750w, {{img_url feature_image size="l"}} 960w, {{img_url feature_image size="xl"}} 1200w"
+                    sizes="(max-width: 1024px) 100vw, 800px"
+                    alt="{{title}}"
+                />
+            </figure>
+        {{/if}}
+
+        {{!-- Article body. toc.js (loaded below) extracts h2/h3 from this rendered
+              HTML and injects the table of contents into the sidebar container. --}}
+        <section class="post-full-content" data-post-content>
+            {{content}}
+        </section>
+
+        {{!-- Author bio block, below the article. --}}
+        {{#primary_author}}
+            <aside class="author-bio" aria-label="{{t "About the author"}}">
+                {{#if profile_image}}
+                    <img class="author-bio-avatar" src="{{img_url profile_image size="s"}}" alt="{{name}}" loading="lazy" />
+                {{/if}}
+                <div class="author-bio-body">
+                    <h2 class="author-bio-name">{{name}}</h2>
+                    {{#if bio}}
+                        <p class="author-bio-text">{{bio}}</p>
+                    {{/if}}
+                </div>
+            </aside>
+        {{/primary_author}}
+
+        {{!-- Up to 3 related articles in the SAME language (current language tag),
+              excluding the current post. --}}
+        {{#get "posts" filter="tag:{{tag.slug}}+id:-{{id}}" limit="3" as |related|}}
+            {{#if related}}
+                <section class="related-posts" aria-label="{{t "Related posts"}}">
+                    <h2 class="related-posts-heading">{{t "Related posts"}}</h2>
+                    <div class="related-posts-grid post-feed">
+                        {{#foreach related}}
+                            {{> "post-card"}}
+                        {{/foreach}}
+                    </div>
+                </section>
+            {{/if}}
+        {{/get}}
+    </article>
+
+    {{!-- Article-aware sidebar: ToC container (populated by toc.js) + featured posts. --}}
+    {{> "sidebar"}}
+</div>
+{{/post}}
+
+{{!-- toc.js: extract h2/h3 from the rendered article and inject into the sidebar ToC. --}}
+<script src="{{asset "js/toc.js"}}"></script>

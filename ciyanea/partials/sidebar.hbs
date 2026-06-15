@@ -1,22 +1,63 @@
 {{!--
   Context-aware sidebar.
 
-  This slice implements the HOMEPAGE branch: a preview of the most recent
-  micro-post for the current language, a language-relative "view all micro-posts"
-  link, and a popular-tags block. (The article-page branch — ToC + featured posts
-  — is added in a later slice.)
+  ARTICLE branch ({{#if post}}): a table-of-contents container that toc.js
+  populates from the rendered article's h2/h3 headings, plus a featured-posts
+  block of up to 3 posts excluding the current one (filter featured:true+id:-<id>).
 
-  The route binds `data: tag.hash-<code>`, so the language's internal tag is
-  available here as {{tag}} and {{tag.slug}} is `hash-<code>`. The recent
-  micro-post is fetched with the SAME query as the micro feed, limited to one:
-  filter tag:<lang>+tag:hash-micro, limit=1, page=1. It is rendered through the
-  micro-card partial so the preview matches the stream presentation, and
-  micro-feed.js (loaded on the homepage) wires the identical expand/collapse
-  behavior onto it via the shared [data-micro-card] hook.
+  HOMEPAGE branch: a preview of the most recent micro-post for the current
+  language, a language-relative "view all micro-posts" link, and a popular-tags
+  block. TAG-PAGE branch: the popular-tags block only — the micro preview is
+  scoped to the homepage.
+
+  The recent micro-post preview depends on the homepage's `data: tag.hash-<code>`
+  binding, where {{tag.slug}} is `hash-<code>`; it is therefore guarded by
+  {{#is "index"}} so it renders ONLY on the homepage. On a tag page {{tag}} is the
+  current PUBLIC tag, so the language micro query is not meaningful there and the
+  preview is omitted. The popular-tags block (below) is context-independent and
+  renders on both the homepage and tag pages.
+
+  On the homepage the recent micro-post is fetched with the SAME query as the
+  micro feed, limited to one: filter tag:<lang>+tag:hash-micro, limit=1, page=1.
+  It is rendered through the micro-card partial so the preview matches the stream
+  presentation, and micro-feed.js (loaded on the homepage) wires the identical
+  expand/collapse behavior onto it via the shared [data-micro-card] hook.
 --}}
+{{#if post}}
+<aside class="article-sidebar" aria-label="{{t "Sidebar"}}">
+
+    {{!-- Table of contents. toc.js fills [data-toc] from the article's h2/h3
+          headings and hides this block when the article has none. --}}
+    <section class="sidebar-block sidebar-toc" aria-label="{{t "Table of contents"}}">
+        <h2 class="sidebar-heading">{{t "Table of contents"}}</h2>
+        <nav class="sidebar-toc-nav" data-toc></nav>
+    </section>
+
+    {{!-- Featured posts: up to 3, excluding the current article. --}}
+    <section class="sidebar-block sidebar-featured" aria-label="{{t "Featured posts"}}">
+        <h2 class="sidebar-heading">{{t "Featured posts"}}</h2>
+
+        {{#get "posts" filter="featured:true+id:-{{id}}" limit="3"}}
+            {{#if posts}}
+                <ul class="sidebar-featured-list">
+                    {{#foreach posts}}
+                        <li class="sidebar-featured-item">
+                            <a class="sidebar-featured-link" href="{{url}}">{{title}}</a>
+                        </li>
+                    {{/foreach}}
+                </ul>
+            {{else}}
+                <p class="sidebar-empty">{{t "No featured posts yet."}}</p>
+            {{/if}}
+        {{/get}}
+    </section>
+
+</aside>
+{{else}}
 <aside class="home-sidebar" aria-label="{{t "Sidebar"}}">
 
-    {{!-- Recent micro-post preview. --}}
+    {{!-- Recent micro-post preview — homepage only. --}}
+    {{#is "index"}}
     <section class="sidebar-block sidebar-micro" aria-label="{{t "Recent micro-post"}}">
         <h2 class="sidebar-heading">{{t "Latest micro-post"}}</h2>
 
@@ -34,6 +75,7 @@
             {{t "View all micro-posts"}} &rarr;
         </a>
     </section>
+    {{/is}}
 
     {{!-- Popular tags. Public tags only (internal hash- language/micro tags are
           not browsable topics); each entry links to its /tag/<slug>/ page. --}}
@@ -56,3 +98,4 @@
     </section>
 
 </aside>
+{{/if}}
