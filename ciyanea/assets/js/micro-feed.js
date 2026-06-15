@@ -24,6 +24,17 @@
   var FIELDS = "html,published_at,feature_image";
   var PAGE_SIZE = 20;
 
+  // Localized expand/collapse labels. The first page is server-rendered by
+  // micro-card.hbs, which emits data-label-more / data-label-less via {{t}};
+  // client-appended cards reuse those so every card stays in the active locale.
+  function expandLabels() {
+    var src = document.querySelector("[data-micro-expand]");
+    return {
+      more: (src && src.getAttribute("data-label-more")) || "Show more",
+      less: (src && src.getAttribute("data-label-less")) || "Show less"
+    };
+  }
+
   // --- reusable expand/collapse (shared with the homepage sidebar in slice 7) ---
 
   // A body is "clampable" when its rendered height exceeds the collapsed 5-line
@@ -44,12 +55,13 @@
     }
     btn.hidden = false;
 
+    var labels = expandLabels();
     btn.addEventListener("click", function () {
       var expanded = card.classList.toggle("is-expanded");
       btn.setAttribute("aria-expanded", expanded ? "true" : "false");
       btn.textContent = expanded
-        ? btn.getAttribute("data-label-less") || "Show less"
-        : btn.getAttribute("data-label-more") || "Show more";
+        ? btn.getAttribute("data-label-less") || labels.less
+        : btn.getAttribute("data-label-more") || labels.more;
     });
   }
 
@@ -94,13 +106,16 @@
     body.innerHTML = post.html || "";
     article.appendChild(body);
 
+    var labels = expandLabels();
     var btn = document.createElement("button");
     btn.type = "button";
     btn.className = "micro-card-expand";
     btn.setAttribute("data-micro-expand", "");
+    btn.setAttribute("data-label-more", labels.more);
+    btn.setAttribute("data-label-less", labels.less);
     btn.setAttribute("aria-expanded", "false");
     btn.hidden = true;
-    btn.textContent = "Show more";
+    btn.textContent = labels.more;
     article.appendChild(btn);
 
     if (post.feature_image) {
