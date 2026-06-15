@@ -1,17 +1,17 @@
 {{!--
   Hero carousel for the homepage.
 
-  Queries up to five FEATURED posts in the current language. The route binds
-  `data: tag.hash-<code>`, so {{tag.slug}} (value hash-<code>) is the language's
-  internal tag; the {{#get}} filter scopes the featured query to it. The whole
-  region is wrapped in {{#if posts}}, so when there are no featured posts the
-  hero renders nothing at all.
+  Queries up to five FEATURED posts in the current language. The homepage wrapper
+  template (index-<code>.hbs) passes lang="hash-<code>" — the language's internal
+  tag slug — down through partials/home.hbs to here; the {{#get}} filter scopes the
+  featured query to it. The whole region is wrapped in {{#if posts}}, so when there
+  are no featured posts the hero renders nothing at all.
 
   Each slide shows the large cover image, the first PUBLIC tag, the title, an
   excerpt, and the author. hero.js (loaded by index.hbs) handles 5-second
   auto-advance, the previous/next arrows, and the clickable dot indicators.
 --}}
-{{#get "posts" filter="featured:true+tag:{{tag.slug}}" limit="5" include="authors,tags"}}
+{{#get "posts" filter="featured:true+tag:{{lang}}" limit="5" include="authors,tags"}}
     {{#if posts}}
         <section class="hero" aria-label="{{t "Featured"}}" data-hero>
             <div class="hero-viewport">

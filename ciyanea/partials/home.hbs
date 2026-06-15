@@ -1,0 +1,68 @@
+{{!--
+  Shared homepage body for one language.
+
+  Rendered by the per-language wrapper templates (index-<code>.hbs), each of which
+  passes lang="hash-<code>" — the language's internal tag slug. That value is the
+  ONLY way the language reaches this template: Ghost cannot bind an internal tag
+  through a route `data:` property (it 404s), and internal tags are stripped from
+  the post context, so {{lang}} is threaded down to the partials that need to scope
+  a Content API query to the current language ({{> "hero"}} and {{> "sidebar"}}).
+
+  The collection filter (tag:hash-<code>+tag:-hash-micro) already excludes
+  micro-posts, so {{#foreach posts}} below contains only this language's long-form
+  articles. Each post renders through the post-card partial; pagination is custom
+  markup built from the {{pagination}} variables, with labels routed through `t`.
+--}}
+
+{{!--
+  Hero carousel of up to five featured posts in the current language. The partial
+  self-guards with {{#if posts}}, so it renders nothing when there are no featured
+  posts; hero.js (loaded below) drives auto-advance, arrows, and dot indicators.
+--}}
+{{> "hero" lang=lang}}
+
+<div class="home-layout">
+    <section class="post-feed" aria-label="{{t "Articles"}}">
+        {{#foreach posts}}
+            {{> "post-card"}}
+        {{else}}
+            <p class="post-list-empty">{{t "No posts yet."}}</p>
+        {{/foreach}}
+
+        {{#if pagination.pages}}
+            <nav class="pagination" role="navigation" aria-label="{{t "Pagination"}}">
+                {{#if prev}}
+                    <a class="pagination-link pagination-newer" href="{{page_url prev}}" rel="prev">
+                        &larr; {{t "Newer"}}
+                    </a>
+                {{/if}}
+
+                <span class="pagination-indicator">{{page}} / {{pages}}</span>
+
+                {{#if next}}
+                    <a class="pagination-link pagination-older" href="{{page_url next}}" rel="next">
+                        {{t "Older"}} &rarr;
+                    </a>
+                {{/if}}
+            </nav>
+        {{/if}}
+    </section>
+
+    {{!--
+      Right-hand sidebar: recent micro-post preview + popular tags. It sits in
+      the second column of .home-layout on wide screens and collapses below the
+      main column under 768px (see the responsive rules in screen.css).
+    --}}
+    {{> "sidebar" lang=lang}}
+</div>
+
+{{!-- Hero carousel behaviour: 5s auto-advance, arrows, dot indicators. --}}
+<script src="{{asset "js/hero.js"}}"></script>
+
+{{!--
+  micro-feed.js wires the shared expand/collapse behavior onto the sidebar's
+  recent micro-post preview (it targets every [data-micro-card] in the document).
+  There is no [data-micro-stream] on the homepage, so the infinite-scroll path is
+  inert — only the reusable expand/collapse runs here.
+--}}
+<script src="{{asset "js/micro-feed.js"}}"></script>

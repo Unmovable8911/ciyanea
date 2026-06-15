@@ -3,9 +3,12 @@
 {{!--
   Article detail page.
 
-  The route binds `data: tag.hash-<code>`, so the current language's internal tag
-  is available as {{tag}} / {{tag.slug}} (value hash-<code>) for the related-posts
-  query below.
+  Related posts must be scoped to the article's language, but Ghost strips the
+  internal language tag from the post context on a detail page (and cannot bind it
+  through a route `data:` property — that 404s). The language is therefore only
+  knowable from the URL prefix, so the related-posts block is filled client-side by
+  related.js (mirroring micro-feed.js): it reads /<code>/ from the path, derives
+  hash-<code>, and queries the Content API. See the placeholder near the bottom.
 
   Layout mirrors the homepage two-column scaffold (.home-layout): the article in
   the main column, the article-aware sidebar (ToC container + featured posts) in
@@ -64,20 +67,20 @@
             </aside>
         {{/primary_author}}
 
-        {{!-- Up to 3 related articles in the SAME language (current language tag),
-              excluding the current post. --}}
-        {{#get "posts" filter="tag:{{tag.slug}}+id:-{{id}}" limit="3" as |related|}}
-            {{#if related}}
-                <section class="related-posts" aria-label="{{t "Related posts"}}">
-                    <h2 class="related-posts-heading">{{t "Related posts"}}</h2>
-                    <div class="related-posts-grid post-feed">
-                        {{#foreach related}}
-                            {{> "post-card"}}
-                        {{/foreach}}
-                    </div>
-                </section>
-            {{/if}}
-        {{/get}}
+        {{!-- Up to 3 related articles in the SAME language, excluding this post.
+              Filled by related.js from the Content API (the language is taken from
+              the URL prefix). Starts hidden; the script reveals it only when it has
+              results, so with no JS / no key / no matches nothing is shown. --}}
+        <section
+            class="related-posts"
+            aria-label="{{t "Related posts"}}"
+            data-related-posts
+            data-post-id="{{id}}"
+            hidden
+        >
+            <h2 class="related-posts-heading">{{t "Related posts"}}</h2>
+            <div class="related-posts-grid post-feed" data-related-posts-list></div>
+        </section>
     </article>
 
     {{!-- Article-aware sidebar: ToC container (populated by toc.js) + featured posts. --}}
@@ -87,3 +90,6 @@
 
 {{!-- toc.js: extract h2/h3 from the rendered article and inject into the sidebar ToC. --}}
 <script src="{{asset "js/toc.js"}}"></script>
+
+{{!-- related.js: fill the language-scoped related-posts block from the Content API. --}}
+<script src="{{asset "js/related.js"}}"></script>

@@ -10,12 +10,12 @@
   block. TAG-PAGE branch: the popular-tags block only — the micro preview is
   scoped to the homepage.
 
-  The recent micro-post preview depends on the homepage's `data: tag.hash-<code>`
-  binding, where {{tag.slug}} is `hash-<code>`; it is therefore guarded by
-  {{#is "index"}} so it renders ONLY on the homepage. On a tag page {{tag}} is the
-  current PUBLIC tag, so the language micro query is not meaningful there and the
-  preview is omitted. The popular-tags block (below) is context-independent and
-  renders on both the homepage and tag pages.
+  The recent micro-post preview needs the current language: the homepage wrapper
+  (index-<code>.hbs) passes lang="hash-<code>" through partials/home.hbs into this
+  partial as {{lang}}. It is guarded by {{#if lang}} so it renders ONLY on the
+  homepage (on tag/article pages {{lang}} is absent and the language micro query is
+  not meaningful). The popular-tags block (below) is context-independent and renders
+  on the homepage, tag pages, and article pages.
 
   On the homepage the recent micro-post is fetched with the SAME query as the
   micro feed, limited to one: filter tag:<lang>+tag:hash-micro, limit=1, page=1.
@@ -56,12 +56,15 @@
 {{else}}
 <aside class="home-sidebar" aria-label="{{t "Sidebar"}}">
 
-    {{!-- Recent micro-post preview — homepage only. --}}
-    {{#is "index"}}
+    {{!-- Recent micro-post preview — homepage only. Guarded by {{#if lang}}: the
+          homepage wrapper passes lang="hash-<code>", tag pages do not. (Custom
+          language collections don't carry the "index" context, so {{#is "index"}}
+          can't be used here.) --}}
+    {{#if lang}}
     <section class="sidebar-block sidebar-micro" aria-label="{{t "Recent micro-post"}}">
         <h2 class="sidebar-heading">{{t "Latest micro-post"}}</h2>
 
-        {{#get "posts" filter="tag:{{tag.slug}}+tag:hash-micro" limit="1" page="1"}}
+        {{#get "posts" filter="tag:{{lang}}+tag:hash-micro" limit="1" page="1"}}
             {{#foreach posts}}
                 {{> "micro-card"}}
             {{else}}
@@ -75,7 +78,7 @@
             {{t "View all micro-posts"}} &rarr;
         </a>
     </section>
-    {{/is}}
+    {{/if}}
 
     {{!-- Popular tags. Public tags only (internal hash- language/micro tags are
           not browsable topics); each entry links to its /tag/<slug>/ page. --}}

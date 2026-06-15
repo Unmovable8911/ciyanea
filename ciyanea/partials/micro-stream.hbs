@@ -1,0 +1,39 @@
+{{!--
+  Shared per-language micro-post stream for /<code>/micro/.
+
+  Rendered by the per-language wrapper templates (micro-<code>.hbs), each of which
+  passes lang="hash-<code>" — the language's internal tag slug. Ghost cannot bind
+  an internal tag through a route `data:` property (it 404s), so {{lang}} is the
+  language identity here.
+
+  The collection filter (tag:hash-<code>+tag:hash-micro) means the server-rendered
+  {{#foreach posts}} already contains only this language's micro-posts — so the
+  first page renders without JS (progressive enhancement) and micro-feed.js takes
+  over to append further pages on infinite scroll.
+
+  Layout: a localized page title at the top and a single centered column
+  (max-width ~640px, styled via .micro-stream) holding the tweet-style cards.
+  data-micro-tag carries the language tag slug ({{lang}} = hash-<code>) so
+  micro-feed.js can build the Content API filter (tag:hash-<code>+tag:hash-micro).
+--}}
+
+<div class="micro-page">
+    <h1 class="micro-page-title">{{t "Micro"}}</h1>
+
+    <div
+        class="micro-stream"
+        data-micro-stream
+        data-micro-tag="{{lang}}"
+    >
+        {{#foreach posts}}
+            {{> "micro-card"}}
+        {{else}}
+            <p class="micro-stream-empty">{{t "No micro-posts yet."}}</p>
+        {{/foreach}}
+    </div>
+
+    {{!-- Sentinel observed by micro-feed.js to trigger loading the next page. --}}
+    <div class="micro-stream-sentinel" data-micro-sentinel aria-hidden="true"></div>
+</div>
+
+<script src="{{asset "js/micro-feed.js"}}"></script>

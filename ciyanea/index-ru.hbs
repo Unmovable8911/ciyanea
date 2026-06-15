@@ -1,0 +1,8 @@
+{{!< default}}
+{{!--
+  Wrapper template for the /ru/ language homepage. Injects the language's
+  internal tag slug (hash-ru) into the shared body so language-scoped Content
+  API queries (hero, sidebar micro-preview) resolve to this language. See
+  partials/home.hbs for the actual layout.
+--}}
+{{> "home" lang="hash-ru"}}
