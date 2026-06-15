@@ -18,6 +18,5 @@ Requirements:
 Constraints:
 - Do not try to operate on the database, nor ghost.
 - Do not try to read / write / modify anything mentioned in @.gitignore.
-- Though I've give you the way to login to ghost container, do not try to operate in the container, you only have read permission in the container.
 
 **Current Status**: Theme built, fixing errors and bugs.

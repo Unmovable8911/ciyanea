@@ -31,7 +31,7 @@
     </button>
 
     <ul class="lang-switcher-menu" role="listbox" hidden data-lang-menu>
-        {{#get "tags" filter="visibility:internal+slug:-hash-micro" fields="slug,description" limit="all"}}
+        {{#get "tags" filter="visibility:internal+slug:-hash-micro" fields="slug,description" limit="50"}}
             {{#foreach tags}}
                 {{!-- data-lang-slug carries the full internal-tag slug (hash-<code>);
                       lang-switcher.js derives <code> = slug without `hash-` to build
