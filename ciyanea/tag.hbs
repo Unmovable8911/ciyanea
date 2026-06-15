@@ -8,7 +8,7 @@
   tag's identity (name + description) and its size (post count). Below it, the
   tag's posts are rendered through the shared post-card partial in the same
   responsive grid as the homepage, with the identical custom pagination markup
-  ({{page}} / {{pages}} plus conditional older/newer links routed through {{t}}).
+  (page / pages plus conditional older/newer links routed through the `t` helper).
 
   The sidebar partial renders its popular-tags branch here; its recent micro-post
   preview is homepage-scoped (guarded by {{#is "index"}} in sidebar.hbs), so on a
