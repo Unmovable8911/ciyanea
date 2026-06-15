@@ -1,0 +1,62 @@
+{{!< default}}
+
+{{!--
+  Tag page at /tag/<slug>/.
+
+  On a tag page the current tag IS the data context, so {{name}}, {{description}}
+  and {{count.posts}} resolve to the tag's own fields. The header presents the
+  tag's identity (name + description) and its size (post count). Below it, the
+  tag's posts are rendered through the shared post-card partial in the same
+  responsive grid as the homepage, with the identical custom pagination markup
+  ({{page}} / {{pages}} plus conditional older/newer links routed through {{t}}).
+
+  The sidebar partial renders its popular-tags branch here; its recent micro-post
+  preview is homepage-scoped (guarded by {{#is "index"}} in sidebar.hbs), so on a
+  tag page only the popular-tags block appears — letting visitors pivot to related
+  topics.
+--}}
+
+{{#tag}}
+<header class="tag-header">
+    <h1 class="tag-header-name">{{name}}</h1>
+
+    {{#if description}}
+        <p class="tag-header-description">{{description}}</p>
+    {{/if}}
+
+    <p class="tag-header-count">
+        {{plural count.posts empty=(t "No posts yet.") singular=(t "1 post") plural=(t "% posts")}}
+    </p>
+</header>
+{{/tag}}
+
+<div class="home-layout">
+    <section class="post-feed" aria-label="{{t "Articles"}}">
+        {{#foreach posts}}
+            {{> "post-card"}}
+        {{else}}
+            <p class="post-list-empty">{{t "No posts yet."}}</p>
+        {{/foreach}}
+
+        {{#if pagination.pages}}
+            <nav class="pagination" role="navigation" aria-label="{{t "Pagination"}}">
+                {{#if prev}}
+                    <a class="pagination-link pagination-newer" href="{{page_url prev}}" rel="prev">
+                        &larr; {{t "Newer"}}
+                    </a>
+                {{/if}}
+
+                <span class="pagination-indicator">{{page}} / {{pages}}</span>
+
+                {{#if next}}
+                    <a class="pagination-link pagination-older" href="{{page_url next}}" rel="next">
+                        {{t "Older"}} &rarr;
+                    </a>
+                {{/if}}
+            </nav>
+        {{/if}}
+    </section>
+
+    {{!-- Popular-tags sidebar (the micro preview is homepage-only). --}}
+    {{> "sidebar"}}
+</div>
