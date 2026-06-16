@@ -12,12 +12,16 @@
   Each item also carries a static href fallback for the pre-rewrite state and for
   the root redirect shell, so the link is never broken before a language is known.
   Home falls back to the site root.
+
+  Each item declares the built-in section it represents via data-nav-section
+  ("home" / "micro"). active-section.js resolves the current section from the URL
+  and marks the matching item current (aria-current + .is-current) — issue 03.
 --}}
 <ul class="site-nav-list">
     <li class="site-nav-item">
-        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="">{{t "Home"}}</a>
+        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="" data-nav-section="home">{{t "Home"}}</a>
     </li>
     <li class="site-nav-item">
-        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="micro/">{{t "Micro"}}</a>
+        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="micro/" data-nav-section="micro">{{t "Micro"}}</a>
     </li>
 </ul>

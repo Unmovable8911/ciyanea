@@ -138,6 +138,12 @@ a:hover {
     text-decoration: none;
 }
 
+/* Active section: the nav item for the section the visitor is in (issue 03). */
+.site-nav-link.is-current {
+    color: var(--color-accent);
+    font-weight: 600;
+}
+
 .site-main {
     flex: 1 0 auto;
 }
