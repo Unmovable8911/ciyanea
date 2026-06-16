@@ -16,6 +16,14 @@
   Each item declares the built-in section it represents via data-nav-section
   ("home" / "micro"). active-section.js resolves the current section from the URL
   and marks the matching item current (aria-current + .is-current) — issue 03.
+
+  Author-managed global page links (issue 04) are appended AFTER Home and Micro.
+  They come from Ghost's primary navigation (admin-configured) and are rendered
+  as ordinary anchors using the URL Ghost resolves — NO language prefix (no
+  data-lang-href) is applied, so a global page (e.g. About) or tag/external link
+  is reached directly and never 404s from a prefix being added. Pages and tags
+  stay global in this iteration. When the author configures zero primary-nav
+  links, {{navigation}} emits an empty list and no broken menu region appears.
 --}}
 <ul class="site-nav-list">
     <li class="site-nav-item">
@@ -24,4 +32,9 @@
     <li class="site-nav-item">
         <a class="site-nav-link" href="{{@site.url}}" data-lang-href="micro/" data-nav-section="micro">{{t "Micro"}}</a>
     </li>
+    {{#foreach @site.navigation}}
+        <li class="site-nav-item">
+            <a class="site-nav-link" href="{{this.url}}" data-nav-admin>{{this.label}}</a>
+        </li>
+    {{/foreach}}
 </ul>
