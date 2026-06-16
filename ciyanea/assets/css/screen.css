@@ -75,6 +75,9 @@ a:hover {
 }
 
 .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     border-bottom: 1px solid var(--color-border);
     background: var(--color-bg);
 }
@@ -92,6 +95,14 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.site-header-left,
+.site-header-right {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 .site-logo {

@@ -25,20 +25,31 @@
     <div class="site">
         <header class="site-header">
             <div class="site-header-inner">
-                <a class="site-logo" href="{{@site.url}}">
-                    {{#if @site.logo}}
-                        <img src="{{@site.logo}}" alt="{{@site.title}}" />
-                    {{else}}
-                        {{@site.title}}
-                    {{/if}}
-                </a>
+                {{!-- Left group: logo + navigation. --}}
+                <div class="site-header-left">
+                    <a class="site-logo" href="{{@site.url}}">
+                        {{#if @site.logo}}
+                            <img src="{{@site.logo}}" alt="{{@site.title}}" />
+                        {{else}}
+                            {{@site.title}}
+                        {{/if}}
+                    </a>
 
-                <nav class="site-nav" aria-label="{{t "Main navigation"}}">
-                    {{!-- Navigation partial is filled in a later slice. --}}
-                </nav>
+                    <nav class="site-nav" aria-label="{{t "Main navigation"}}">
+                        {{!-- Navigation partial is filled in a later slice. --}}
+                    </nav>
+                </div>
 
-                {{!-- Always-visible language control, far right of the header. --}}
-                {{> language-switcher}}
+                {{!-- Right group: search affordance + language switcher.
+                      The search control is a placeholder filled in a later slice;
+                      the language switcher stays rightmost. --}}
+                <div class="site-header-right">
+                    <div class="site-search" data-site-search>
+                        {{!-- Search control is filled in a later slice. --}}
+                    </div>
+
+                    {{> language-switcher}}
+                </div>
             </div>
         </header>
 
