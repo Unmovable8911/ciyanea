@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!--
+  Offline fixture for search_control.spec.py.
+
+  It mirrors the rendered header right-group markup produced by the theme
+  (default.hbs + partials/search.hbs) so the search control can be verified
+  without redeploying the theme to Ghost. The {{t "Search"}} label is rendered
+  as its English value ("Search").
+
+  The <script> at the bottom is a minimal stand-in for Ghost's sodo-search
+  bundle: it listens for clicks on any [data-ghost-search] element and mounts a
+  search overlay into #sodo-search-root, which is exactly the externally
+  observable behavior the real bundle provides.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Search control fixture</title>
+    <style>
+        body { margin: 0; font-family: sans-serif; }
+        .site-header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1.5rem; padding: 1rem 2rem;
+        }
+        .site-header-right { display: flex; align-items: center; gap: 1.5rem; }
+        .site-search-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 2.5rem; height: 2.5rem; padding: 0; border: 1px solid #333;
+            border-radius: 50%; background: #1a1a1a; color: #fff; cursor: pointer;
+        }
+        .lang-switcher { position: relative; }
+        .lang-switcher-toggle {
+            width: 2.5rem; height: 2.5rem; border-radius: 50%;
+            border: 1px solid #333; background: #1a1a1a; color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div class="site-header-left">
+                <a class="site-logo" href="/">Ciyanea</a>
+                <nav class="site-nav" aria-label="Main navigation"></nav>
+            </div>
+
+            <div class="site-header-right">
+                <div class="site-search" data-site-search>
+                    <button type="button" class="site-search-toggle" aria-label="Search" data-ghost-search>
+                        <svg class="site-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 21l-4.35-4.35M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="lang-switcher" data-lang-switcher>
+                    <button type="button" class="lang-switcher-toggle" aria-label="Change language"></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="height: 2000px"></main>
+
+    <!-- Minimal sodo-search stub: mirrors the real bundle's click→overlay behavior. -->
+    <script>
+        (function () {
+            var root = document.createElement('div');
+            root.id = 'sodo-search-root';
+            document.body.appendChild(root);
+            document.addEventListener('click', function (e) {
+                var trigger = e.target.closest('[data-ghost-search]');
+                if (!trigger) return;
+                if (root.querySelector('[data-search-overlay]')) return;
+                var overlay = document.createElement('div');
+                overlay.setAttribute('data-search-overlay', '');
+                overlay.innerHTML = '<input type="search" aria-label="Search this site" />';
+                root.appendChild(overlay);
+            });
+        })();
+    </script>
+</body>
+</html>

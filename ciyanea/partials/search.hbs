@@ -1,0 +1,18 @@
+{{!--
+  Header search control (issue 05).
+
+  Delegates entirely to Ghost's built-in sodo-search overlay: the button carries
+  the `data-ghost-search` attribute that the auto-injected sodo-search bundle
+  binds to. The theme intentionally does NOT build a custom search UI or query
+  the Content API for search — clicking this button opens Ghost's overlay, whose
+  results are site-wide (not language-scoped, an accepted limitation).
+
+  The accessible label is localized via the `t` i18n helper (the "Search" key
+  lives in every locale file). The SVG is decorative (aria-hidden); the button is
+  labelled by aria-label so assistive tech announces it.
+--}}
+<button type="button" class="site-search-toggle" aria-label="{{t "Search"}}" data-ghost-search>
+    <svg class="site-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M21 21l-4.35-4.35M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"></path>
+    </svg>
+</button>

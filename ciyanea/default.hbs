@@ -41,11 +41,11 @@
                 </div>
 
                 {{!-- Right group: search affordance + language switcher.
-                      The search control is a placeholder filled in a later slice;
-                      the language switcher stays rightmost. --}}
+                      The search control opens Ghost's built-in sodo-search
+                      overlay; the language switcher stays rightmost. --}}
                 <div class="site-header-right">
                     <div class="site-search" data-site-search>
-                        {{!-- Search control is filled in a later slice. --}}
+                        {{> search}}
                     </div>
 
                     {{> language-switcher}}
