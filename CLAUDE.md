@@ -19,4 +19,4 @@ Constraints:
 - Do not try to operate on the database, nor ghost.
 - Do not try to read / write / modify anything mentioned in @.gitignore.
 
-**Current Status**: Theme built, fixing errors and bugs.
+**Current Status**: Theme built, adding more features to enrich the theme.
