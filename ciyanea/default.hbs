@@ -35,9 +35,28 @@
                         {{/if}}
                     </a>
 
-                    <nav class="site-nav" aria-label="{{t "Main navigation"}}">
-                        {{> navigation}}
-                    </nav>
+                    {{!-- The hamburger collapses the nav on narrow screens
+                          (issue 06). CSS hides the button at desktop widths and
+                          keeps the nav inline; below 768px the button shows and
+                          the nav becomes a toggled panel driven by nav-menu.js.
+                          The search control + language switcher stay in the bar
+                          (they live in the right group, untouched here). --}}
+                    <div class="site-nav-menu" data-nav-menu>
+                        <button
+                            type="button"
+                            class="site-nav-toggle"
+                            aria-label="{{t "Menu"}}"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            data-nav-toggle
+                        >
+                            <span class="site-nav-toggle-bars" aria-hidden="true"></span>
+                        </button>
+
+                        <nav class="site-nav" aria-label="{{t "Main navigation"}}" hidden data-nav-panel>
+                            {{> navigation}}
+                        </nav>
+                    </div>
                 </div>
 
                 {{!-- Right group: search affordance + language switcher.
@@ -71,6 +90,9 @@
 
     {{!-- Global: highlight the nav item for the current section (Home / Micro). --}}
     <script src="{{asset "js/active-section.js"}}"></script>
+
+    {{!-- Global: collapse the nav behind a hamburger on narrow screens. --}}
+    <script src="{{asset "js/nav-menu.js"}}"></script>
 
     {{ghost_foot}}
 </body>

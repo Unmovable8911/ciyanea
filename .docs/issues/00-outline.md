@@ -3,4 +3,4 @@
 3. Active-section highlight — blocked by: 2 — status: resolved
 4. Author-managed global page links — blocked by: 2 — status: resolved
 5. Search control (sodo-search) — blocked by: 1, 2 — status: resolved
-6. Mobile hamburger menu — blocked by: 2, 5 — status: pending
+6. Mobile hamburger menu — blocked by: 2, 5 — status: resolved

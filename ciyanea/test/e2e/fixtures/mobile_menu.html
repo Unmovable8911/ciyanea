@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<!--
+  Offline fixture for mobile_menu.spec.py.
+
+  It mirrors the rendered header markup produced by the theme (default.hbs left
+  group with the hamburger + nav panel, right group with the search control and
+  language switcher) so the mobile hamburger menu can be verified without
+  redeploying the theme to Ghost. The {{t ...}} labels are rendered as their
+  English values.
+
+  The inlined <style> block is a faithful copy of the header + hamburger rules
+  from assets/css/screen.css (the parts the menu's behavior depends on), with
+  the design tokens it references resolved to literal values. The real
+  nav-menu.js is loaded at the bottom — the same script the deployed theme uses.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mobile menu fixture</title>
+    <style>
+        :root {
+            --color-bg: #0f0f0f;
+            --color-bg-card: #1a1a1a;
+            --color-border: #333;
+            --color-text: #f5f5f5;
+            --color-accent: #4ade80;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: sans-serif; background: var(--color-bg); color: var(--color-text); }
+
+        .site-header {
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--color-border); background: var(--color-bg);
+        }
+        .site-header-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1.5rem; padding: 1.5rem;
+        }
+        .site-header-left, .site-header-right {
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .site-search { display: flex; align-items: center; }
+        .site-search-toggle {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 2.5rem; height: 2.5rem; padding: 0; border: 1px solid var(--color-border);
+            border-radius: 50%; background: var(--color-bg-card); color: var(--color-text); cursor: pointer;
+        }
+        .lang-switcher { position: relative; }
+        .lang-switcher-toggle {
+            width: 2.5rem; height: 2.5rem; border-radius: 50%;
+            border: 1px solid var(--color-border); background: var(--color-bg-card); color: var(--color-text);
+        }
+        .site-nav-list {
+            display: flex; align-items: center; gap: 1.5rem; margin: 0; padding: 0; list-style: none;
+        }
+        .site-nav-link { color: var(--color-text); font-weight: 500; }
+
+        /* --- Mobile hamburger (copied from screen.css issue 06) --- */
+        .site-nav-menu { display: flex; align-items: center; }
+        .site-nav-menu .site-nav[hidden] { display: block; }
+
+        .site-nav-toggle {
+            display: none; align-items: center; justify-content: center;
+            width: 2.5rem; height: 2.5rem; padding: 0; border: 1px solid var(--color-border);
+            border-radius: 50%; background: var(--color-bg-card); color: var(--color-text); cursor: pointer;
+        }
+        .site-nav-toggle:hover, .site-nav-toggle:focus-visible, .site-nav-menu.is-open .site-nav-toggle {
+            border-color: var(--color-accent); color: var(--color-accent);
+        }
+        .site-nav-toggle-bars,
+        .site-nav-toggle-bars::before,
+        .site-nav-toggle-bars::after {
+            display: block; width: 1.125rem; height: 2px; background: currentColor; border-radius: 1px;
+        }
+        .site-nav-toggle-bars { position: relative; }
+        .site-nav-toggle-bars::before, .site-nav-toggle-bars::after { content: ""; position: absolute; left: 0; }
+        .site-nav-toggle-bars::before { top: -6px; }
+        .site-nav-toggle-bars::after { top: 6px; }
+
+        @media (max-width: 768px) {
+            .site-nav-toggle { display: inline-flex; }
+            .site-nav-menu { position: relative; }
+            .site-nav-menu .site-nav {
+                position: absolute; top: calc(100% + 0.5rem); left: 0; z-index: 110;
+                min-width: 12rem; padding: 0.75rem; border: 1px solid var(--color-border);
+                border-radius: 0.75rem; background: var(--color-bg-card);
+                box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+            }
+            .site-nav-menu .site-nav[hidden] { display: none; }
+            .site-nav-menu .site-nav-list { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="site-header-inner">
+            <div class="site-header-left">
+                <a class="site-logo" href="/">Ciyanea</a>
+
+                <div class="site-nav-menu" data-nav-menu>
+                    <button
+                        type="button"
+                        class="site-nav-toggle"
+                        aria-label="Menu"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                        data-nav-toggle
+                    >
+                        <span class="site-nav-toggle-bars" aria-hidden="true"></span>
+                    </button>
+
+                    <nav class="site-nav" aria-label="Main navigation" hidden data-nav-panel>
+                        <ul class="site-nav-list">
+                            <li class="site-nav-item">
+                                <a class="site-nav-link" href="/us/" data-nav-section="home">Home</a>
+                            </li>
+                            <li class="site-nav-item">
+                                <a class="site-nav-link" href="/us/micro/" data-nav-section="micro">Micro</a>
+                            </li>
+                            <li class="site-nav-item">
+                                <a class="site-nav-link" href="/about/" data-nav-admin>About</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+            <div class="site-header-right">
+                <div class="site-search" data-site-search>
+                    <button type="button" class="site-search-toggle" aria-label="Search" data-ghost-search>
+                        <svg class="site-search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M21 21l-4.35-4.35M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="lang-switcher" data-lang-switcher>
+                    <button type="button" class="lang-switcher-toggle" aria-label="Change language"></button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main style="height: 2000px"></main>
+
+    <!-- The real theme script that drives the hamburger toggle. -->
+    <script src="../../../assets/js/nav-menu.js"></script>
+</body>
+</html>
