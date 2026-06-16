@@ -30,6 +30,13 @@
     return FLAG_BASE + code + ".svg";
   }
 
+  // Resolve a data-lang-href value ("" or "micro/") for the active code into
+  // "/<code>/<rel>". Mirrors assets/js/lang-href.mjs (unit-tested there).
+  function buildLangHref(relValue, activeCode) {
+    var rel = (relValue || "").replace(/^\//, "");
+    return "/" + activeCode + "/" + rel;
+  }
+
   // The current language code: first path segment if it is a known language code,
   // else the stored preference, else "" (nothing highlighted).
   function currentCode(knownCodes) {
@@ -111,9 +118,10 @@
     if (active) {
       var relLinks = document.querySelectorAll("[data-lang-href]");
       Array.prototype.forEach.call(relLinks, function (el) {
-        var rel = el.getAttribute("data-lang-href") || "";
-        rel = rel.replace(/^\//, "");
-        el.setAttribute("href", "/" + active + "/" + rel);
+        el.setAttribute(
+          "href",
+          buildLangHref(el.getAttribute("data-lang-href"), active)
+        );
       });
     }
 

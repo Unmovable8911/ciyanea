@@ -1,0 +1,23 @@
+{{!--
+  Built-in, language-aware navigation items (issue 02).
+
+  Home and Micro are rendered by the theme itself (not from Ghost admin) so they
+  can be language-prefixed. Each reuses the existing data-lang-href client-side
+  rewrite in lang-switcher.js: once an active language code is known, the link's
+  href becomes /<code>/<data-lang-href>.
+
+    - Home  : data-lang-href="" -> /<code>/        (bare language root)
+    - Micro : data-lang-href="micro/" -> /<code>/micro/
+
+  Each item also carries a static href fallback for the pre-rewrite state and for
+  the root redirect shell, so the link is never broken before a language is known.
+  Home falls back to the site root.
+--}}
+<ul class="site-nav-list">
+    <li class="site-nav-item">
+        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="">{{t "Home"}}</a>
+    </li>
+    <li class="site-nav-item">
+        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="micro/">{{t "Micro"}}</a>
+    </li>
+</ul>
