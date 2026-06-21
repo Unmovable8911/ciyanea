@@ -75,6 +75,7 @@
 
     function start() {
       if (slides.length <= 1) return;
+      stop();
       timer = window.setInterval(next, AUTO_ADVANCE_MS);
     }
 
