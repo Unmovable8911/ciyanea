@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<!--
+  Offline fixture for hero_carousel.spec.py.
+
+  Mirrors the rendered hero carousel markup produced by the theme
+  (partials/hero.hbs + partials/home.hbs) so the hero carousel behavior can
+  be verified without redeploying the theme to Ghost. The {{t ...}} labels are
+  rendered as their English values.
+
+  The inlined <style> block is a faithful copy of the hero + homepage layout
+  rules from assets/css/screen.css, with design tokens resolved to literals.
+  The real hero.js is loaded at the bottom.
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hero carousel fixture</title>
+    <style>
+        :root {
+            --color-bg: #0f0f0f;
+            --color-bg-card: #1a1a1a;
+            --color-border: #333;
+            --color-text: #f5f5f5;
+            --color-accent: #4ade80;
+            --gap: 2rem;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: sans-serif; background: var(--color-bg); color: var(--color-text); }
+
+        /* --- Hero --- */
+        .hero {
+            position: relative;
+            margin-bottom: var(--gap);
+            border-radius: 12px;
+            overflow: hidden;
+            background: var(--color-bg-card);
+            border: 1px solid var(--color-border);
+        }
+        .hero-viewport { overflow: hidden; }
+        .hero-track { display: flex; transition: transform 0.5s ease; }
+        .hero-slide { position: relative; flex: 0 0 100%; min-width: 100%; }
+        .hero-slide-link { display: block; position: relative; color: var(--color-text); }
+        .hero-slide-link:hover { text-decoration: none; }
+        .hero-slide-image {
+            display: block; width: 100%; height: 70vh; object-fit: cover;
+        }
+        .hero-slide-overlay {
+            position: absolute; inset: 0; display: flex; flex-direction: column;
+            justify-content: flex-end; gap: 0.75rem; padding: 2.5rem;
+            background: linear-gradient(to top,
+                rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0) 75%);
+        }
+        .hero-slide-tag {
+            align-self: flex-start; font-size: 0.72rem; font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent);
+        }
+        .hero-slide-title { margin: 0; font-size: 2.25rem; color: var(--color-text); max-width: 40ch; }
+        .hero-slide-excerpt {
+            margin: 0; max-width: 60ch; color: var(--color-text); opacity: 0.85;
+            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+        }
+        /* --- Dots --- */
+        .hero-dots {
+            position: absolute; bottom: 1.5rem; right: 1.5rem; left: auto; transform: none;
+            z-index: 2; display: flex; gap: 0.5rem;
+        }
+        .hero-dot {
+            width: 1.5rem; height: 3px; padding: 0; border: none; border-radius: 2px;
+            background: rgba(240,240,240,0.4); cursor: pointer;
+            transition: background 0.15s ease, width 0.15s ease;
+        }
+        .hero-dot.is-active { background: var(--color-accent); width: 2.5rem; }
+
+        /* --- Hero row: hero + sidebar side-by-side --- */
+        .hero-row {
+            display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: var(--gap);
+            margin-bottom: var(--gap); padding: 0 2rem;
+        }
+        .hero-row .hero { margin-bottom: 0; }
+
+        /* --- Homepage layout --- */
+        .home-layout {
+            padding: 0 2rem;
+        }
+        .post-feed { display: grid; gap: var(--gap); }
+        .home-sidebar { /* placeholder sidebar */ }
+        .sidebar-block { margin-bottom: 1.5rem; }
+        .sidebar-heading { font-size: 0.9rem; font-weight: 600; margin: 0 0 0.75rem; }
+
+        @media (max-width: 1024px) {
+            .hero-row { grid-template-columns: minmax(0, 1fr) 260px; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-row { grid-template-columns: 1fr; }
+            .hero-row .home-sidebar { display: none; }
+            .home-layout .home-sidebar { display: block; }
+            .hero-slide-image { height: 70vh; }
+            .hero-slide-overlay { padding: 1.5rem; }
+            .hero-slide-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero row: hero + sidebar side-by-side (mirrors partials/home.hbs) -->
+    <div class="hero-row">
+        <section class="hero" aria-label="Featured" data-hero>
+            <div class="hero-viewport">
+                <div class="hero-track" data-hero-track>
+                    <article class="hero-slide" data-hero-slide aria-roledescription="slide">
+                        <a class="hero-slide-link" href="/us/sample-post-1/">
+                            <img class="hero-slide-image"
+                                 src="https://picsum.photos/1200/800?1"
+                                 alt="Sample Post One" loading="lazy" />
+                            <div class="hero-slide-overlay">
+                                <span class="hero-slide-tag">Technology</span>
+                                <h2 class="hero-slide-title">Sample Post One</h2>
+                                <p class="hero-slide-excerpt">This is the excerpt for the first sample featured post in the hero carousel.</p>
+                            </div>
+                        </a>
+                    </article>
+                    <article class="hero-slide" data-hero-slide aria-roledescription="slide">
+                        <a class="hero-slide-link" href="/us/sample-post-2/">
+                            <img class="hero-slide-image"
+                                 src="https://picsum.photos/1200/800?2"
+                                 alt="Sample Post Two" loading="lazy" />
+                            <div class="hero-slide-overlay">
+                                <span class="hero-slide-tag">Design</span>
+                                <h2 class="hero-slide-title">Sample Post Two</h2>
+                                <p class="hero-slide-excerpt">This is the excerpt for the second sample featured post in the hero carousel.</p>
+                            </div>
+                        </a>
+                    </article>
+                </div>
+            </div>
+
+            <div class="hero-dots" data-hero-dots role="tablist" aria-label="Featured"></div>
+        </section>
+
+        <aside class="home-sidebar" aria-label="Sidebar">
+            <section class="sidebar-block sidebar-micro" aria-label="Recent micro-post">
+                <h2 class="sidebar-heading">Latest micro-post</h2>
+                <p>Micro-post preview placeholder</p>
+            </section>
+            <section class="sidebar-block sidebar-tags popular-tags" aria-label="Popular tags">
+                <h2 class="sidebar-heading">Popular tags</h2>
+                <p>Tags placeholder</p>
+            </section>
+        </aside>
+    </div>
+
+    <!-- Article list (below hero row) -->
+    <div class="home-layout">
+        <section class="post-feed" aria-label="Articles">
+            <div class="post-card">Article card placeholder 1</div>
+            <div class="post-card">Article card placeholder 2</div>
+        </section>
+    </div>
+
+    <script src="../../../assets/js/hero.js"></script>
+</body>
+</html>

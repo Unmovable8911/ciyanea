@@ -14,12 +14,10 @@
   markup built from the {{pagination}} variables, with labels routed through `t`.
 --}}
 
-{{!--
-  Hero carousel of up to five featured posts in the current language. The partial
-  self-guards with {{#if posts}}, so it renders nothing when there are no featured
-  posts; hero.js (loaded below) drives auto-advance, arrows, and dot indicators.
---}}
-{{> "hero" langtag=langtag}}
+<div class="hero-row">
+    {{> "hero" langtag=langtag}}
+    {{> "sidebar" langtag=langtag}}
+</div>
 
 <div class="home-layout">
     <section class="post-feed" aria-label="{{t "Articles"}}">
@@ -47,16 +45,9 @@
             </nav>
         {{/if}}
     </section>
-
-    {{!--
-      Right-hand sidebar: recent micro-post preview + popular tags. It sits in
-      the second column of .home-layout on wide screens and collapses below the
-      main column under 768px (see the responsive rules in screen.css).
-    --}}
-    {{> "sidebar" langtag=langtag}}
 </div>
 
-{{!-- Hero carousel behaviour: 5s auto-advance, arrows, dot indicators. --}}
+{{!-- Hero carousel behaviour: 5s auto-advance, dot indicators. --}}
 <script src="{{asset "js/hero.js"}}"></script>
 
 {{!--

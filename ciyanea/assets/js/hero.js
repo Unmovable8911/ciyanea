@@ -1,10 +1,10 @@
 /*
  * Ciyanea — hero carousel (client side).
  *
- * Responsibilities (per PRD / issue 05):
+ * Responsibilities:
  *   - 5-second auto-advance through the featured slides.
- *   - Previous / next arrows for manual navigation.
- *   - Clickable dot indicators (one per slide) that jump to a slide.
+ *   - Clickable dash-style dot indicators (one per slide) that jump to a slide.
+ *   - Pause on hover so readers aren't rushed.
  *
  * The markup is rendered server-side by partials/hero.hbs. This module is loaded
  * only by index.hbs and is a no-op when the hero region is absent (no featured
@@ -25,8 +25,6 @@
     );
     if (slides.length === 0) return;
 
-    var prevBtn = root.querySelector("[data-hero-prev]");
-    var nextBtn = root.querySelector("[data-hero-next]");
     var dotsContainer = root.querySelector("[data-hero-dots]");
 
     var index = 0;
@@ -75,10 +73,6 @@
       goTo(index + 1);
     }
 
-    function prev() {
-      goTo(index - 1);
-    }
-
     function start() {
       if (slides.length <= 1) return;
       timer = window.setInterval(next, AUTO_ADVANCE_MS);
@@ -94,19 +88,6 @@
     function restart() {
       stop();
       start();
-    }
-
-    if (nextBtn) {
-      nextBtn.addEventListener("click", function () {
-        next();
-        restart();
-      });
-    }
-    if (prevBtn) {
-      prevBtn.addEventListener("click", function () {
-        prev();
-        restart();
-      });
     }
 
     // Pause on hover so readers aren't rushed.
