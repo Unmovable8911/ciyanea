@@ -1,40 +1,18 @@
 {{!--
-  Built-in, language-aware navigation items (issue 02).
+  Built-in, language-aware navigation items.
 
-  Home and Micro are rendered by the theme itself (not from Ghost admin) so they
-  can be language-prefixed. Each reuses the existing data-lang-href client-side
-  rewrite in lang-switcher.js: once an active language code is known, the link's
-  href becomes /<code>/<data-lang-href>.
+  All nav links are hard-coded here (Ghost admin navigation is ignored because
+  it cannot vary by language). Each link uses data-lang-href for client-side
+  URL rewriting by lang-switcher.js and data-i18n for client-side translation.
 
-    - Home  : data-lang-href="" -> /<code>/        (bare language root)
+    - Home  : data-lang-href="" -> /<code>/
     - Micro : data-lang-href="micro/" -> /<code>/micro/
-
-  Each item also carries a static href fallback for the pre-rewrite state and for
-  the root redirect shell, so the link is never broken before a language is known.
-  Home falls back to the site root.
-
-  Each item declares the built-in section it represents via data-nav-section
-  ("home" / "micro"). active-section.js resolves the current section from the URL
-  and marks the matching item current (aria-current + .is-current) — issue 03.
-
-  Author-managed global page links (issue 04) are appended AFTER Home and Micro.
-  They come from Ghost's primary navigation (admin-configured) and are rendered
-  as ordinary anchors using the URL Ghost resolves — NO language prefix (no
-  data-lang-href) is applied, so a global page (e.g. About) or tag/external link
-  is reached directly and never 404s from a prefix being added. Pages and tags
-  stay global in this iteration. When the author configures zero primary-nav
-  links, {{navigation}} emits an empty list and no broken menu region appears.
 --}}
 <ul class="site-nav-list">
     <li class="site-nav-item">
-        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="" data-nav-section="home">{{t "Home"}}</a>
+        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="" data-nav-section="home" data-i18n="Home">{{t "Home"}}</a>
     </li>
     <li class="site-nav-item">
-        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="micro/" data-nav-section="micro">{{t "Micro"}}</a>
+        <a class="site-nav-link" href="{{@site.url}}" data-lang-href="micro/" data-nav-section="micro" data-i18n="Micro">{{t "Micro"}}</a>
     </li>
-    {{#foreach @site.navigation}}
-        <li class="site-nav-item">
-            <a class="site-nav-link" href="{{this.url}}" data-nav-admin>{{this.label}}</a>
-        </li>
-    {{/foreach}}
 </ul>

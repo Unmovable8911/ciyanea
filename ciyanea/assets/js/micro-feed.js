@@ -200,6 +200,9 @@
             var card = renderCard(post);
             stream.appendChild(card);
             setupExpand(card);
+            if (window.Ciyanea && window.Ciyanea.carousel) {
+              window.Ciyanea.carousel.init(card);
+            }
           });
           page += 1;
           var pagination = data.meta && data.meta.pagination;
