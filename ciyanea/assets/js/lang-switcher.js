@@ -125,6 +125,28 @@
       });
     }
 
+    // Client-side nav i18n: Ghost's {{t}} uses the site-wide locale, but this
+    // site is multi-language with per-URL-prefix languages.  Translate built-in
+    // nav items ([data-i18n]) into the active language detected from the URL.
+    var NAV_I18N = {
+      cn: { Home: "首页", Micro: "微博" },
+      us: { Home: "Home", Micro: "Micro" },
+      de: { Home: "Startseite", Micro: "Micro" },
+      fr: { Home: "Accueil", Micro: "Micro" },
+      ru: { Home: "Главная", Micro: "Микро" },
+      it: { Home: "Home", Micro: "Micro" },
+      es: { Home: "Inicio", Micro: "Micro" }
+    };
+
+    if (active && NAV_I18N[active]) {
+      var translations = NAV_I18N[active];
+      var i18nEls = document.querySelectorAll("[data-i18n]");
+      Array.prototype.forEach.call(i18nEls, function (el) {
+        var key = el.getAttribute("data-i18n");
+        if (translations[key]) el.textContent = translations[key];
+      });
+    }
+
     // Dropdown open/close.
     function setOpen(open) {
       if (menu) menu.hidden = !open;

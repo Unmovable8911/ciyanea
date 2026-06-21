@@ -13,10 +13,11 @@ Info:
 - Theme files reside in @ciyanea. All code edits related to the theme itself should only be made inside this directory, including tests.
 
 Requirements:
-- Reply user in Chinese, but write / modify files in English.
+- No matter in what language the user is prompting, always reply in simplified Chinese, but write / modify files in English.
+- After modification made to theme, load the modified theme by running `./update-theme.sh`.
 
 Constraints:
 - Do not try to operate on the database, nor ghost.
-- Do not try to read / write / modify anything mentioned in @.gitignore.
+- Do not try to read / write / modify anything mentioned in @.gitignore unless after getting my consent.
 
-**Current Status**: Theme built, adding more features to enrich the theme.
+**Current Status**: Refining the theme design.

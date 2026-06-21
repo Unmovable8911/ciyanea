@@ -1,22 +1,6 @@
-/*
- * Ciyanea — mobile hamburger menu (client side, issue 06).
- *
- * On narrow screens (CSS hides the inline nav and shows the hamburger below the
- * 768px breakpoint) the nav list collapses behind a toggle button. This wires
- * the toggle to the same open/close conventions as the language switcher:
- *   - clicking the hamburger toggles the menu,
- *   - clicking anywhere outside the menu/toggle closes it,
- *   - pressing Escape closes it.
- *
- * The open/close decision logic is mirrored from assets/js/nav-menu.mjs
- * (unit-tested there without a DOM). The search button and language switcher
- * stay in the bar at all widths — only the nav list is collapsed here.
- */
 (function () {
   "use strict";
 
-  // Inlined mirror of createMenuController in nav-menu.mjs: emit only on an
-  // actual transition so we never redundantly toggle DOM state.
   function createMenuController(onChange) {
     var open = false;
     function set(next) {
@@ -45,25 +29,35 @@
     var panel = root.querySelector("[data-nav-panel]");
     if (!toggle || !panel) return;
 
-    var controller = createMenuController(function (open) {
-      panel.hidden = !open;
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      root.classList.toggle("is-open", open);
-    });
+    panel.removeAttribute("hidden");
+    panel.setAttribute("aria-hidden", "true");
+    root.classList.add("is-drawer");
 
-    // Start collapsed: the panel is hidden until the toggle opens it. On desktop
-    // CSS reveals the inline nav and hides the hamburger regardless of `hidden`.
-    panel.hidden = true;
-    toggle.setAttribute("aria-expanded", "false");
+    var backdrop = document.createElement("div");
+    backdrop.className = "site-nav-backdrop";
+    root.appendChild(backdrop);
+
+    var controller = createMenuController(function (open) {
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      panel.setAttribute("aria-hidden", open ? "false" : "true");
+      root.classList.toggle("is-open", open);
+      document.documentElement.classList.toggle("has-nav-drawer", open);
+    });
 
     toggle.addEventListener("click", function (ev) {
       ev.stopPropagation();
       controller.toggle();
     });
 
-    document.addEventListener("click", function (ev) {
-      if (!controller.isOpen()) return;
-      if (!root.contains(ev.target)) controller.close();
+    var closeBtn = root.querySelector("[data-nav-close]");
+    if (closeBtn) {
+      closeBtn.addEventListener("click", function () {
+        controller.close();
+      });
+    }
+
+    backdrop.addEventListener("click", function () {
+      controller.close();
     });
 
     document.addEventListener("keydown", function (ev) {

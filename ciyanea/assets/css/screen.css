@@ -185,10 +185,12 @@ a:hover {
 }
 
 /* Desktop: the nav is always inline-visible, overriding the `hidden` attribute
- * the markup ships (it keeps the panel collapsed pre-JS on mobile). Below 768px
- * the @media block re-honors `hidden` so the panel toggles. */
-.site-nav-menu .site-nav[hidden] {
-    display: block;
+ * the markup ships (it keeps the panel collapsed pre-JS on mobile). On mobile
+ * JS removes `hidden` and uses transform-based drawer visibility instead. */
+@media (min-width: 769px) {
+    .site-nav-menu .site-nav[hidden] {
+        display: block;
+    }
 }
 
 .site-nav-toggle {
@@ -243,38 +245,181 @@ a:hover {
     top: 6px;
 }
 
+.site-nav-backdrop {
+    display: none;
+}
+
+.site-nav-drawer-header,
+.site-nav-drawer-footer {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .site-nav-toggle {
         display: inline-flex;
     }
 
-    /* The nav becomes a dropdown panel anchored under the hamburger. It is
-     * hidden until nav-menu.js sets the `hidden` attribute false on toggle. */
-    .site-nav-menu .site-nav {
-        position: absolute;
-        top: calc(100% + 0.5rem);
+    .site-nav-menu.is-drawer .site-nav {
+        position: fixed;
+        top: 0;
         left: 0;
-        z-index: 110;
-        min-width: 12rem;
-        padding: 0.75rem;
-        border: 1px solid var(--color-border);
-        border-radius: 0.75rem;
+        bottom: 0;
+        z-index: 210;
+        width: 280px;
+        padding: 2rem 1.5rem;
+        border: none;
+        border-right: 1px solid var(--color-border);
+        border-radius: 0;
         background: var(--color-bg-card);
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        background-image: linear-gradient(170deg, rgba(74, 222, 128, 0.06) 0%, transparent 40%);
+        transform: translateX(-100%);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
     }
 
-    .site-nav-menu {
-        position: relative;
+    .site-nav-menu.is-open .site-nav {
+        transform: translateX(0);
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.35);
     }
 
-    .site-nav-menu .site-nav[hidden] {
-        display: none;
+    .site-nav-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 200;
+        background: rgba(0, 0, 0, 0.5);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .site-nav-menu.is-open .site-nav-backdrop {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    html.has-nav-drawer {
+        overflow: hidden;
     }
 
     .site-nav-menu .site-nav-list {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
+        align-items: stretch;
+        gap: 0.25rem;
+    }
+
+    .site-nav-menu .site-nav-link {
+        font-family: var(--font-heading);
+        font-size: 1.3rem;
+        font-weight: 500;
+        display: block;
+        padding: 0.6rem 1rem;
+        border-left: 2px solid transparent;
+        border-radius: 0 6px 6px 0;
+        transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .site-nav-menu .site-nav-link:hover {
+        background: rgba(74, 222, 128, 0.06);
+    }
+
+    .site-nav-menu .site-nav-link.is-current {
+        border-left-color: var(--color-accent);
+        background: rgba(74, 222, 128, 0.08);
+    }
+
+    /* Drawer header: branding + close */
+    .site-nav-drawer-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-bottom: 1.25rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+    }
+
+    .site-nav-drawer-title {
+        font-family: var(--font-heading);
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--color-accent);
+    }
+
+    .site-nav-drawer-title:hover {
+        text-decoration: none;
+        opacity: 0.85;
+    }
+
+    .site-nav-drawer-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: var(--color-text-muted);
+        cursor: pointer;
+        transition: color 0.15s ease;
+    }
+
+    .site-nav-drawer-close:hover,
+    .site-nav-drawer-close:focus-visible {
+        color: var(--color-accent);
+    }
+
+    /* Drawer footer: pushed to bottom */
+    .site-nav-drawer-footer {
+        display: block;
+        margin-top: auto;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--color-border);
+    }
+
+    .site-nav-drawer-footer p {
+        margin: 0;
+        font-size: 0.72rem;
+        color: var(--color-text-muted);
+        letter-spacing: 0.03em;
+    }
+
+    /* Staggered entrance for nav items */
+    .site-nav-menu.is-open .site-nav-item {
+        animation: drawer-item-in 0.35s ease forwards;
+        opacity: 0;
+    }
+
+    .site-nav-menu.is-open .site-nav-item:nth-child(1) { animation-delay: 0.08s; }
+    .site-nav-menu.is-open .site-nav-item:nth-child(2) { animation-delay: 0.16s; }
+    .site-nav-menu.is-open .site-nav-item:nth-child(3) { animation-delay: 0.24s; }
+    .site-nav-menu.is-open .site-nav-item:nth-child(4) { animation-delay: 0.32s; }
+
+    @keyframes drawer-item-in {
+        from { opacity: 0; transform: translateX(-10px); }
+        to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Drawer header fade-in */
+    .site-nav-menu.is-open .site-nav-drawer-header {
+        animation: drawer-fade-in 0.3s ease forwards;
+    }
+
+    @keyframes drawer-fade-in {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+    .site-nav-menu.is-open .site-nav-item,
+    .site-nav-menu.is-open .site-nav-drawer-header {
+        animation: none;
+        opacity: 1;
     }
 }
 
@@ -904,6 +1049,120 @@ a:hover {
     border-radius: 8px;
 }
 
+/* --- Micro carousel (gallery → Instagram-style slider) --- */
+
+.mc-carousel {
+    position: relative;
+    margin-top: 1rem;
+}
+
+.mc-carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 20px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+    padding-inline: 20px;
+}
+
+.mc-carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.mc-carousel-slide {
+    flex: 0 0 calc(100% - 56px);
+    scroll-snap-align: start;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.mc-carousel-slide img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 70vh;
+    object-fit: cover;
+}
+
+.mc-carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+}
+
+.mc-carousel-arrow:hover {
+    opacity: 1;
+}
+
+.mc-carousel-arrow.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.mc-carousel-prev {
+    left: 8px;
+}
+
+.mc-carousel-next {
+    right: 8px;
+}
+
+.mc-carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 0 6px;
+}
+
+.mc-carousel-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background: var(--color-text-muted, #666);
+    opacity: 0.4;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.mc-carousel-dot.is-active {
+    opacity: 1;
+    background: var(--color-accent, #4dabf7);
+}
+
+/* Hide the original Ghost gallery layout inside micro cards (fallback if JS hasn't run) */
+.micro-card-body .kg-gallery-card {
+    display: none;
+}
+
+.micro-card > .mc-carousel {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    margin-inline: -1.4rem;
+}
+
+.micro-card > .mc-carousel:first-child {
+    margin-top: -1.25rem;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+}
+
 .micro-card-meta {
     display: flex;
     justify-content: flex-end;
@@ -958,6 +1217,11 @@ a:hover {
     border-left: 0;
     border-radius: 0;
     padding: 0;
+}
+
+.sidebar-micro .mc-carousel {
+    margin-inline: 0;
+    margin-top: 0;
 }
 
 .sidebar-micro-all {
