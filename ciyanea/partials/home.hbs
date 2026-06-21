@@ -14,37 +14,38 @@
   markup built from the {{pagination}} variables, with labels routed through `t`.
 --}}
 
-<div class="hero-row">
-    {{> "hero" langtag=langtag}}
-    {{> "sidebar" langtag=langtag}}
-</div>
-
 <div class="home-layout">
-    <section class="post-feed" aria-label="{{t "Articles"}}">
-        {{#foreach posts}}
-            {{> "post-card"}}
-        {{else}}
-            <p class="post-list-empty">{{t "No posts yet."}}</p>
-        {{/foreach}}
+    <div class="home-main">
+        {{> "hero" langtag=langtag}}
 
-        {{#if pagination.pages}}
-            <nav class="pagination" role="navigation" aria-label="{{t "Pagination"}}">
-                {{#if prev}}
-                    <a class="pagination-link pagination-newer" href="{{page_url prev}}" rel="prev">
-                        &larr; {{t "Newer"}}
-                    </a>
-                {{/if}}
+        <section class="post-feed" aria-label="{{t "Articles"}}">
+            {{#foreach posts}}
+                {{> "post-card"}}
+            {{else}}
+                <p class="post-list-empty">{{t "No posts yet."}}</p>
+            {{/foreach}}
 
-                <span class="pagination-indicator">{{page}} / {{pages}}</span>
+            {{#if pagination.pages}}
+                <nav class="pagination" role="navigation" aria-label="{{t "Pagination"}}">
+                    {{#if prev}}
+                        <a class="pagination-link pagination-newer" href="{{page_url prev}}" rel="prev">
+                            &larr; {{t "Newer"}}
+                        </a>
+                    {{/if}}
 
-                {{#if next}}
-                    <a class="pagination-link pagination-older" href="{{page_url next}}" rel="next">
-                        {{t "Older"}} &rarr;
-                    </a>
-                {{/if}}
-            </nav>
-        {{/if}}
-    </section>
+                    <span class="pagination-indicator">{{page}} / {{pages}}</span>
+
+                    {{#if next}}
+                        <a class="pagination-link pagination-older" href="{{page_url next}}" rel="next">
+                            {{t "Older"}} &rarr;
+                        </a>
+                    {{/if}}
+                </nav>
+            {{/if}}
+        </section>
+    </div>
+
+    {{> "sidebar" langtag=langtag}}
 </div>
 
 {{!-- Hero carousel behaviour: 5s auto-advance, dot indicators. --}}

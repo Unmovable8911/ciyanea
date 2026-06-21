@@ -551,22 +551,17 @@ a:hover {
     width: 2.5rem;
 }
 
-/* --- Hero row: hero + sidebar side-by-side on desktop. --- */
-
-.hero-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 320px;
-    gap: var(--gap);
-    margin-bottom: var(--gap);
-}
-
-.hero-row .hero {
-    margin-bottom: 0;
-}
-
-/* --- Homepage layout. --- */
+/* --- Homepage layout: main column (hero + articles) + sidebar. --- */
 
 .home-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: var(--gap);
+    align-items: start;
+}
+
+.home-main .hero {
+    margin-bottom: var(--gap);
 }
 
 /* Article grid: responsive auto-fit cards. */
@@ -1413,17 +1408,17 @@ a:hover {
  */
 
 @media (max-width: 1024px) {
-    .hero-row {
-        grid-template-columns: minmax(0, 1fr) 260px;
+    .home-layout {
+        grid-template-columns: minmax(0, 1fr) 220px;
     }
 }
 
 @media (max-width: 768px) {
-    .hero-row {
+    .home-layout {
         grid-template-columns: 1fr;
     }
 
-    .hero-row .home-sidebar {
+    .home-layout .home-sidebar {
         display: none;
     }
 
